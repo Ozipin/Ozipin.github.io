@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="spring," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Spring-Core源码中PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper类的代码解析">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper">
+<meta property="og:url" content="https://www.ozipin.com/2022/01/03/Spring-Core%E6%BA%90%E7%A0%81-PropertySourcesPropertyResolver%EF%BC%8CPropertySources%EF%BC%8CPropertySource%EF%BC%8CAbstractPropertyResolver%EF%BC%8CPropertyPlaceholde/index.html">
+<meta property="og:site_name" content="ozipin&#39;s blog">
+<meta property="og:description" content="Spring-Core源码中PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper类的代码解析">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-01-03T08:03:49.000Z">
+<meta property="article:modified_time" content="2023-02-18T12:05:26.505Z">
+<meta property="article:author" content="Ozipin">
+<meta property="article:tag" content="spring">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.ozipin.com/2022/01/03/Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholde/"/>
+
+
+
+
+
+  <title>Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper | ozipin's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/Ozipin" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ozipin's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">热爱技术，享受生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ozipin.com/2022/01/03/Spring-Core%E6%BA%90%E7%A0%81-PropertySourcesPropertyResolver%EF%BC%8CPropertySources%EF%BC%8CPropertySource%EF%BC%8CAbstractPropertyResolver%EF%BC%8CPropertyPlaceholde/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ozipin's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-03T16:03:49+08:00">
+                2022-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  Spring-Core源码中PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper类的代码解析
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper"><a href="#Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper" class="headerlink" title="Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper"></a>Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper</h2><p>​	PropertySourcesPropertyResolver类看名字就可以知道是针对PropertySources对象中的属性进行解析的工具类（spring命名中Resolver作为解析器更偏向于表示式的解析），所以它在能获取PropertySources中保存的属性的时候，同时也会对属性中包含的一些占位符表达式进行解析。</p>
+<p>​	PropertySources类作为PropertySource类的复数式命名的类，且本身继承了Iterable类，可想而知的是其实现类一般会内置很多PropertySource。此类本身的接口较少，主要有boolean contains(String name);方法和PropertySource&lt;?&gt; get(String name);方法用于判断是否存在指定的PropertySource和获取指定的PropertySource（不存在返回null）</p>
+<p>​	PropertySource作为一个抽象类，主要的作用其实是内部包含了一个名为source的泛型对象和一个名字，通过将source包装成PropertySource可以让source拥有名字，由于source对象是一个泛型对象，所以它可以是任何类型的数据对象，前提是能通过给定的Key返回对应的Value，一般而言PropertySource包装Properties，Map都是不错的选择</p>
+<p>​	AbstractPropertyResolver作为PropertySourcesPropertyResolver的父类，其本身定义了很多默认方法实现，PropertySourcesPropertyResolver只实现了部分的抽象方法，模板方法设计模式。</p>
+<p>​	PropertyPlaceholderHelper顾名思义是属于属性中的占位符处理的辅助类，主要用于对占位符数据的解析。</p>
+<p>​	以单元测试为例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br><span class="line">285</span><br><span class="line">286</span><br><span class="line">287</span><br><span class="line">288</span><br><span class="line">289</span><br><span class="line">290</span><br><span class="line">291</span><br><span class="line">292</span><br><span class="line">293</span><br><span class="line">294</span><br><span class="line">295</span><br><span class="line">296</span><br><span class="line">297</span><br><span class="line">298</span><br><span class="line">299</span><br><span class="line">300</span><br><span class="line">301</span><br><span class="line">302</span><br><span class="line">303</span><br><span class="line">304</span><br><span class="line">305</span><br><span class="line">306</span><br><span class="line">307</span><br><span class="line">308</span><br><span class="line">309</span><br><span class="line">310</span><br><span class="line">311</span><br><span class="line">312</span><br><span class="line">313</span><br><span class="line">314</span><br><span class="line">315</span><br><span class="line">316</span><br><span class="line">317</span><br><span class="line">318</span><br><span class="line">319</span><br><span class="line">320</span><br><span class="line">321</span><br><span class="line">322</span><br><span class="line">323</span><br><span class="line">324</span><br><span class="line">325</span><br><span class="line">326</span><br><span class="line">327</span><br><span class="line">328</span><br><span class="line">329</span><br><span class="line">330</span><br><span class="line">331</span><br><span class="line">332</span><br><span class="line">333</span><br><span class="line">334</span><br><span class="line">335</span><br><span class="line">336</span><br><span class="line">337</span><br><span class="line">338</span><br><span class="line">339</span><br><span class="line">340</span><br><span class="line">341</span><br><span class="line">342</span><br><span class="line">343</span><br><span class="line">344</span><br><span class="line">345</span><br><span class="line">346</span><br><span class="line">347</span><br><span class="line">348</span><br><span class="line">349</span><br><span class="line">350</span><br><span class="line">351</span><br><span class="line">352</span><br><span class="line">353</span><br><span class="line">354</span><br><span class="line">355</span><br><span class="line">356</span><br><span class="line">357</span><br><span class="line">358</span><br><span class="line">359</span><br><span class="line">360</span><br><span class="line">361</span><br><span class="line">362</span><br><span class="line">363</span><br><span class="line">364</span><br><span class="line">365</span><br><span class="line">366</span><br><span class="line">367</span><br><span class="line">368</span><br><span class="line">369</span><br><span class="line">370</span><br><span class="line">371</span><br><span class="line">372</span><br><span class="line">373</span><br><span class="line">374</span><br><span class="line">375</span><br><span class="line">376</span><br><span class="line">377</span><br><span class="line">378</span><br><span class="line">379</span><br><span class="line">380</span><br><span class="line">381</span><br><span class="line">382</span><br><span class="line">383</span><br><span class="line">384</span><br><span class="line">385</span><br><span class="line">386</span><br><span class="line">387</span><br><span class="line">388</span><br><span class="line">389</span><br><span class="line">390</span><br><span class="line">391</span><br><span class="line">392</span><br><span class="line">393</span><br><span class="line">394</span><br><span class="line">395</span><br><span class="line">396</span><br><span class="line">397</span><br><span class="line">398</span><br><span class="line">399</span><br><span class="line">400</span><br><span class="line">401</span><br><span class="line">402</span><br><span class="line">403</span><br><span class="line">404</span><br><span class="line">405</span><br><span class="line">406</span><br><span class="line">407</span><br><span class="line">408</span><br><span class="line">409</span><br><span class="line">410</span><br><span class="line">411</span><br><span class="line">412</span><br><span class="line">413</span><br><span class="line">414</span><br><span class="line">415</span><br><span class="line">416</span><br><span class="line">417</span><br><span class="line">418</span><br><span class="line">419</span><br><span class="line">420</span><br><span class="line">421</span><br><span class="line">422</span><br><span class="line">423</span><br><span class="line">424</span><br><span class="line">425</span><br><span class="line">426</span><br><span class="line">427</span><br><span class="line">428</span><br><span class="line">429</span><br><span class="line">430</span><br><span class="line">431</span><br><span class="line">432</span><br><span class="line">433</span><br><span class="line">434</span><br><span class="line">435</span><br><span class="line">436</span><br><span class="line">437</span><br><span class="line">438</span><br><span class="line">439</span><br><span class="line">440</span><br><span class="line">441</span><br><span class="line">442</span><br><span class="line">443</span><br><span class="line">444</span><br><span class="line">445</span><br><span class="line">446</span><br><span class="line">447</span><br><span class="line">448</span><br><span class="line">449</span><br><span class="line">450</span><br><span class="line">451</span><br><span class="line">452</span><br><span class="line">453</span><br><span class="line">454</span><br><span class="line">455</span><br><span class="line">456</span><br><span class="line">457</span><br><span class="line">458</span><br><span class="line">459</span><br><span class="line">460</span><br><span class="line">461</span><br><span class="line">462</span><br><span class="line">463</span><br><span class="line">464</span><br><span class="line">465</span><br><span class="line">466</span><br><span class="line">467</span><br><span class="line">468</span><br><span class="line">469</span><br><span class="line">470</span><br><span class="line">471</span><br><span class="line">472</span><br><span class="line">473</span><br><span class="line">474</span><br><span class="line">475</span><br><span class="line">476</span><br><span class="line">477</span><br><span class="line">478</span><br><span class="line">479</span><br><span class="line">480</span><br><span class="line">481</span><br><span class="line">482</span><br><span class="line">483</span><br><span class="line">484</span><br><span class="line">485</span><br><span class="line">486</span><br><span class="line">487</span><br><span class="line">488</span><br><span class="line">489</span><br><span class="line">490</span><br><span class="line">491</span><br><span class="line">492</span><br><span class="line">493</span><br><span class="line">494</span><br><span class="line">495</span><br><span class="line">496</span><br><span class="line">497</span><br><span class="line">498</span><br><span class="line">499</span><br><span class="line">500</span><br><span class="line">501</span><br><span class="line">502</span><br><span class="line">503</span><br><span class="line">504</span><br><span class="line">505</span><br><span class="line">506</span><br><span class="line">507</span><br><span class="line">508</span><br></pre></td><td class="code"><pre><span class="line">	<span class="meta">@Test</span></span><br><span class="line">	<span class="keyword">void</span> <span class="title function_">ignoreUnresolvableNestedPlaceholdersIsConfigurable</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="comment">//MutablePropertySources作为PropertySources的一个实现类，一般也作为PropertySources的默认实现类</span></span><br><span class="line">        <span class="comment">//能将内部的PropertySource有序的保存</span></span><br><span class="line">		<span class="type">MutablePropertySources</span> <span class="variable">ps</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MutablePropertySources</span>();</span><br><span class="line">		ps.addFirst(<span class="keyword">new</span> <span class="title class_">MockPropertySource</span>()</span><br><span class="line">			.withProperty(<span class="string">&quot;p1&quot;</span>, <span class="string">&quot;v1&quot;</span>)</span><br><span class="line">			.withProperty(<span class="string">&quot;p2&quot;</span>, <span class="string">&quot;v2&quot;</span>)</span><br><span class="line">			.withProperty(<span class="string">&quot;p3&quot;</span>, <span class="string">&quot;$&#123;p1&#125;:$&#123;p2&#125;:$&#123;bogus:def&#125;&quot;</span>) <span class="comment">// unresolvable w/ default</span></span><br><span class="line">			.withProperty(<span class="string">&quot;p4&quot;</span>, <span class="string">&quot;$&#123;p1&#125;:$&#123;p2&#125;:$&#123;bogus&#125;&quot;</span>)     <span class="comment">// unresolvable placeholder</span></span><br><span class="line">		);</span><br><span class="line">        <span class="comment">//PropertySourcesPropertyResolver绑定PropertySources</span></span><br><span class="line">		<span class="type">ConfigurablePropertyResolver</span> <span class="variable">pr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">PropertySourcesPropertyResolver</span>(ps);</span><br><span class="line">		assertThat(pr.getProperty(<span class="string">&quot;p1&quot;</span>)).isEqualTo(<span class="string">&quot;v1&quot;</span>);</span><br><span class="line">		assertThat(pr.getProperty(<span class="string">&quot;p2&quot;</span>)).isEqualTo(<span class="string">&quot;v2&quot;</span>);</span><br><span class="line">        <span class="comment">//获取值得时候会进行占位符解析</span></span><br><span class="line">		assertThat(pr.getProperty(<span class="string">&quot;p3&quot;</span>)).isEqualTo(<span class="string">&quot;v1:v2:def&quot;</span>);</span><br><span class="line"></span><br><span class="line">		assertThatIllegalArgumentException().isThrownBy(() -&gt;</span><br><span class="line">				pr.getProperty(<span class="string">&quot;p4&quot;</span>))</span><br><span class="line">			.withMessageContaining(<span class="string">&quot;Could not resolve placeholder &#x27;bogus&#x27; in value \&quot;$&#123;p1&#125;:$&#123;p2&#125;:$&#123;bogus&#125;\&quot;&quot;</span>);</span><br><span class="line"></span><br><span class="line">		pr.setIgnoreUnresolvableNestedPlaceholders(<span class="literal">true</span>);</span><br><span class="line">		assertThat(pr.getProperty(<span class="string">&quot;p4&quot;</span>)).isEqualTo(<span class="string">&quot;v1:v2:$&#123;bogus&#125;&quot;</span>);</span><br><span class="line"></span><br><span class="line">		assertThat(pr.resolvePlaceholders(<span class="string">&quot;$&#123;p1&#125;:$&#123;p2&#125;:$&#123;bogus&#125;&quot;</span>)).isEqualTo(<span class="string">&quot;v1:v2:$&#123;bogus&#125;&quot;</span>);</span><br><span class="line">		assertThatIllegalArgumentException().isThrownBy(() -&gt;</span><br><span class="line">				pr.resolveRequiredPlaceholders(<span class="string">&quot;$&#123;p1&#125;:$&#123;p2&#125;:$&#123;bogus&#125;&quot;</span>))</span><br><span class="line">			.withMessageContaining(<span class="string">&quot;Could not resolve placeholder &#x27;bogus&#x27; in value \&quot;$&#123;p1&#125;:$&#123;p2&#125;:$&#123;bogus&#125;\&quot;&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PropertySourcesPropertyResolver</span> <span class="keyword">extends</span> <span class="title class_">AbstractPropertyResolver</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> PropertySources propertySources;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//构造器</span></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">PropertySourcesPropertyResolver</span><span class="params">(<span class="meta">@Nullable</span> PropertySources propertySources)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.propertySources = propertySources;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">containsProperty</span><span class="params">(String key)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">this</span>.propertySources != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">for</span> (PropertySource&lt;?&gt; propertySource : <span class="built_in">this</span>.propertySources) &#123;</span><br><span class="line">				<span class="keyword">if</span> (propertySource.containsProperty(key)) &#123;</span><br><span class="line">					<span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getProperty</span><span class="params">(String key)</span> &#123;</span><br><span class="line">		<span class="comment">//细看此处  作为通用的获取属性的入口  一般是将属性作为字符串来进行解析并且进行嵌套的占位符解释</span></span><br><span class="line">		<span class="keyword">return</span> getProperty(key, String.class, <span class="literal">true</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">public</span> &lt;T&gt; T <span class="title function_">getProperty</span><span class="params">(String key, Class&lt;T&gt; targetValueType)</span> &#123;</span><br><span class="line">		<span class="comment">//相较于getProperty(String key)此接口多了一个targetValueType参数即将解析完的结果转换到指定的数据类型</span></span><br><span class="line">		<span class="comment">//相较于通用的String类型，targetValueType类型可能有一些未知的风险，比如会抛出ConverterNotFoundException等</span></span><br><span class="line">		<span class="comment">//但是看一下getProperty(String key, Class&lt;T&gt; targetValueType, boolean resolveNestedPlaceholders)方法的实现</span></span><br><span class="line">		<span class="comment">//在根据key获取了值之后会调用convertValueIfNecessary来进行数据格式转换</span></span><br><span class="line">		<span class="comment">//继续跟踪convertValueIfNecessary方法你会发现他在AbstractPropertyResolver已经被实现，而本类并没有尝试去重写这个类</span></span><br><span class="line">		<span class="comment">//细看convertValueIfNecessary的实现类，其实是用了DefaultConversionService.getSharedInstance();来进行的数据格式转换</span></span><br><span class="line">		<span class="comment">//DefaultConversionService一般而言做一些数据转换已经非常强了，想要扩展对于一些自定义的品类的支持</span></span><br><span class="line">		<span class="comment">//可能需要重新set一个扩展了指定类型转换的ConfigurableConversionService</span></span><br><span class="line">		<span class="keyword">return</span> getProperty(key, targetValueType, <span class="literal">true</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">protected</span> String <span class="title function_">getPropertyAsRawString</span><span class="params">(String key)</span> &#123;</span><br><span class="line">		<span class="comment">//看起来在这里没用到 其实不然</span></span><br><span class="line">		<span class="comment">//getProperty方法在执行的时候会调用父类的resolveNestedPlaceholders方法</span></span><br><span class="line">		<span class="comment">//而resolveNestedPlaceholders方法在执行的时候又会调用resolveRequiredPlaceholders方法去解析占位符</span></span><br><span class="line">		<span class="comment">//resolveRequiredPlaceholders最后利用了创建的PropertyPlaceholderHelper类来进行占位符的解析</span></span><br><span class="line">		<span class="comment">//骚操作在于PropertyPlaceholderHelper解析占位符的时候依赖了一个它类中的一个内部类PlaceholderResolver</span></span><br><span class="line">		<span class="comment">//PlaceholderResolver这个类是个接口，且只有一个resolvePlaceholder方法</span></span><br><span class="line">		<span class="comment">//是的！没错！又是tmd用lamdba表达式直接来实现接口 实现方式还是直接调用但当前对象的本接口</span></span><br><span class="line">		<span class="keyword">return</span> getProperty(key, String.class, <span class="literal">false</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">protected</span> &lt;T&gt; T <span class="title function_">getProperty</span><span class="params">(String key, Class&lt;T&gt; targetValueType, <span class="type">boolean</span> resolveNestedPlaceholders)</span> &#123;</span><br><span class="line">		<span class="comment">//这块代码比较简单 就是判断为空和循环遍历下面的所有PropertySource尝试寻找值</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">this</span>.propertySources != <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">for</span> (PropertySource&lt;?&gt; propertySource : <span class="built_in">this</span>.propertySources) &#123;</span><br><span class="line">				<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">					logger.trace(<span class="string">&quot;Searching for key &#x27;&quot;</span> + key + <span class="string">&quot;&#x27; in PropertySource &#x27;&quot;</span> +</span><br><span class="line">							propertySource.getName() + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="type">Object</span> <span class="variable">value</span> <span class="operator">=</span> propertySource.getProperty(key);</span><br><span class="line">				<span class="keyword">if</span> (value != <span class="literal">null</span>) &#123;</span><br><span class="line">					<span class="comment">//如果有找到值 看看要不要进行占位符解析</span></span><br><span class="line">					<span class="keyword">if</span> (resolveNestedPlaceholders &amp;&amp; value <span class="keyword">instanceof</span> String) &#123;</span><br><span class="line">						value = resolveNestedPlaceholders((String) value);</span><br><span class="line">					&#125;</span><br><span class="line">					logKeyFound(key, propertySource, value);</span><br><span class="line">					<span class="comment">//对于获取的值进行类型解析  用的是父类的DefaultConversionService.getSharedInstance()获得的ConversionService</span></span><br><span class="line">					<span class="comment">//在用的是父类的DefaultConversionService这个类的实现逻辑里面一般要转换的值和需要转换的类型一致时不会做处理 直接就返回了</span></span><br><span class="line">					<span class="keyword">return</span> convertValueIfNecessary(value, targetValueType);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">			logger.trace(<span class="string">&quot;Could not find key &#x27;&quot;</span> + key + <span class="string">&quot;&#x27; in any property source&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//记录找到了指定的值</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">void</span> <span class="title function_">logKeyFound</span><span class="params">(String key, PropertySource&lt;?&gt; propertySource, Object value)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (logger.isDebugEnabled()) &#123;</span><br><span class="line">			logger.debug(<span class="string">&quot;Found key &#x27;&quot;</span> + key + <span class="string">&quot;&#x27; in PropertySource &#x27;&quot;</span> + propertySource.getName() +</span><br><span class="line">					<span class="string">&quot;&#x27; with value of type &quot;</span> + value.getClass().getSimpleName());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">class</span> <span class="title class_">AbstractPropertyResolver</span> <span class="keyword">implements</span> <span class="title class_">ConfigurablePropertyResolver</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">final</span> <span class="type">Log</span> <span class="variable">logger</span> <span class="operator">=</span> LogFactory.getLog(getClass());</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> ConfigurableConversionService conversionService;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> PropertyPlaceholderHelper nonStrictHelper;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> PropertyPlaceholderHelper strictHelper;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">boolean</span> <span class="variable">ignoreUnresolvableNestedPlaceholders</span> <span class="operator">=</span> <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">placeholderPrefix</span> <span class="operator">=</span> SystemPropertyUtils.PLACEHOLDER_PREFIX;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">placeholderSuffix</span> <span class="operator">=</span> SystemPropertyUtils.PLACEHOLDER_SUFFIX;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">String</span> <span class="variable">valueSeparator</span> <span class="operator">=</span> SystemPropertyUtils.VALUE_SEPARATOR;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> Set&lt;String&gt; requiredProperties = <span class="keyword">new</span> <span class="title class_">LinkedHashSet</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">	<span class="comment">//获取功能强大的ConfigurableConversionService</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> ConfigurableConversionService <span class="title function_">getConversionService</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">ConfigurableConversionService</span> <span class="variable">cs</span> <span class="operator">=</span> <span class="built_in">this</span>.conversionService;</span><br><span class="line">		<span class="keyword">if</span> (cs == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">synchronized</span> (<span class="built_in">this</span>) &#123;</span><br><span class="line">				cs = <span class="built_in">this</span>.conversionService;</span><br><span class="line">				<span class="keyword">if</span> (cs == <span class="literal">null</span>) &#123;</span><br><span class="line">					cs = <span class="keyword">new</span> <span class="title class_">DefaultConversionService</span>();</span><br><span class="line">					<span class="built_in">this</span>.conversionService = cs;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> cs;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//设置ConfigurableConversionService</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setConversionService</span><span class="params">(ConfigurableConversionService conversionService)</span> &#123;</span><br><span class="line">		Assert.notNull(conversionService, <span class="string">&quot;ConversionService must not be null&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.conversionService = conversionService;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//设置解析时 占位符的前置符号 比如$&#123;</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPlaceholderPrefix</span><span class="params">(String placeholderPrefix)</span> &#123;</span><br><span class="line">		Assert.notNull(placeholderPrefix, <span class="string">&quot;&#x27;placeholderPrefix&#x27; must not be null&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.placeholderPrefix = placeholderPrefix;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//设置解析时 占位符的后置 比如&#125;</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPlaceholderSuffix</span><span class="params">(String placeholderSuffix)</span> &#123;</span><br><span class="line">		Assert.notNull(placeholderSuffix, <span class="string">&quot;&#x27;placeholderSuffix&#x27; must not be null&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.placeholderSuffix = placeholderSuffix;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//设置默认值的分隔符号 比如 $&#123;x:b&#125;中的:</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setValueSeparator</span><span class="params">(<span class="meta">@Nullable</span> String valueSeparator)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.valueSeparator = valueSeparator;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//设置是否忽略未解析的嵌套占位符</span></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setIgnoreUnresolvableNestedPlaceholders</span><span class="params">(<span class="type">boolean</span> ignoreUnresolvableNestedPlaceholders)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>.ignoreUnresolvableNestedPlaceholders = ignoreUnresolvableNestedPlaceholders;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setRequiredProperties</span><span class="params">(String... requiredProperties)</span> &#123;</span><br><span class="line">		Collections.addAll(<span class="built_in">this</span>.requiredProperties, requiredProperties);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">validateRequiredProperties</span><span class="params">()</span> &#123;</span><br><span class="line">		<span class="type">MissingRequiredPropertiesException</span> <span class="variable">ex</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">MissingRequiredPropertiesException</span>();</span><br><span class="line">		<span class="keyword">for</span> (String key : <span class="built_in">this</span>.requiredProperties) &#123;</span><br><span class="line">			<span class="keyword">if</span> (<span class="built_in">this</span>.getProperty(key) == <span class="literal">null</span>) &#123;</span><br><span class="line">				ex.addMissingRequiredProperty(key);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">if</span> (!ex.getMissingRequiredProperties().isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">throw</span> ex;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">containsProperty</span><span class="params">(String key)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> (getProperty(key) != <span class="literal">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getProperty</span><span class="params">(String key)</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> getProperty(key, String.class);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getProperty</span><span class="params">(String key, String defaultValue)</span> &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> getProperty(key);</span><br><span class="line">		<span class="keyword">return</span> (value != <span class="literal">null</span> ? value : defaultValue);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> &lt;T&gt; T <span class="title function_">getProperty</span><span class="params">(String key, Class&lt;T&gt; targetType, T defaultValue)</span> &#123;</span><br><span class="line">		<span class="type">T</span> <span class="variable">value</span> <span class="operator">=</span> getProperty(key, targetType);</span><br><span class="line">		<span class="keyword">return</span> (value != <span class="literal">null</span> ? value : defaultValue);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">getRequiredProperty</span><span class="params">(String key)</span> <span class="keyword">throws</span> IllegalStateException &#123;</span><br><span class="line">		<span class="type">String</span> <span class="variable">value</span> <span class="operator">=</span> getProperty(key);</span><br><span class="line">		<span class="keyword">if</span> (value == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Required key &#x27;&quot;</span> + key + <span class="string">&quot;&#x27; not found&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> &lt;T&gt; T <span class="title function_">getRequiredProperty</span><span class="params">(String key, Class&lt;T&gt; valueType)</span> <span class="keyword">throws</span> IllegalStateException &#123;</span><br><span class="line">		<span class="type">T</span> <span class="variable">value</span> <span class="operator">=</span> getProperty(key, valueType);</span><br><span class="line">		<span class="keyword">if</span> (value == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalStateException</span>(<span class="string">&quot;Required key &#x27;&quot;</span> + key + <span class="string">&quot;&#x27; not found&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> value;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">resolvePlaceholders</span><span class="params">(String text)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">this</span>.nonStrictHelper == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="built_in">this</span>.nonStrictHelper = createPlaceholderHelper(<span class="literal">true</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> doResolvePlaceholders(text, <span class="built_in">this</span>.nonStrictHelper);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Override</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">resolveRequiredPlaceholders</span><span class="params">(String text)</span> <span class="keyword">throws</span> IllegalArgumentException &#123;</span><br><span class="line">		<span class="comment">//创建严格的占位符属性占位符助手</span></span><br><span class="line">		<span class="keyword">if</span> (<span class="built_in">this</span>.strictHelper == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="built_in">this</span>.strictHelper = createPlaceholderHelper(<span class="literal">false</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//利用占位符助手解析占位符</span></span><br><span class="line">		<span class="keyword">return</span> doResolvePlaceholders(text, <span class="built_in">this</span>.strictHelper);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//解析嵌套的占位符</span></span><br><span class="line">	<span class="keyword">protected</span> String <span class="title function_">resolveNestedPlaceholders</span><span class="params">(String value)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (value.isEmpty()) &#123;</span><br><span class="line">			<span class="keyword">return</span> value;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//由于创建PropertySourcesPropertyResolver的时候没有为ignoreUnresolvableNestedPlaceholders赋值，</span></span><br><span class="line">		<span class="comment">//ignoreUnresolvableNestedPlaceholders默认为false 也就是方法会走到resolveRequiredPlaceholders</span></span><br><span class="line">		<span class="keyword">return</span> (<span class="built_in">this</span>.ignoreUnresolvableNestedPlaceholders ?</span><br><span class="line">				resolvePlaceholders(value) : resolveRequiredPlaceholders(value));</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> PropertyPlaceholderHelper <span class="title function_">createPlaceholderHelper</span><span class="params">(<span class="type">boolean</span> ignoreUnresolvablePlaceholders)</span> &#123;</span><br><span class="line">		<span class="comment">//占位符助手类的设计为依赖注入的前缀，后缀，分隔符让它拥有了更强的适用性</span></span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">PropertyPlaceholderHelper</span>(<span class="built_in">this</span>.placeholderPrefix, <span class="built_in">this</span>.placeholderSuffix,</span><br><span class="line">				<span class="built_in">this</span>.valueSeparator, ignoreUnresolvablePlaceholders);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> String <span class="title function_">doResolvePlaceholders</span><span class="params">(String text, PropertyPlaceholderHelper helper)</span> &#123;</span><br><span class="line">		<span class="comment">//利用占位符助手解析占位符</span></span><br><span class="line">		<span class="comment">//占位符解析助手解析占位符的时候需要一个占位符解析器</span></span><br><span class="line">		<span class="comment">//this的getPropertyAsRawString方法最终代表的是子类实例的getPropertyAsRawString方法</span></span><br><span class="line">		<span class="comment">//PlaceholderResolver是个接口 this::getPropertyAsRawString其实就是lambda风格的创建PlaceholderResolver的实现</span></span><br><span class="line">		<span class="keyword">return</span> helper.replacePlaceholders(text, <span class="built_in">this</span>::getPropertyAsRawString);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//值转换 利用ConversionService进行值类型转换</span></span><br><span class="line">	<span class="meta">@SuppressWarnings(&quot;unchecked&quot;)</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">protected</span> &lt;T&gt; T <span class="title function_">convertValueIfNecessary</span><span class="params">(Object value, <span class="meta">@Nullable</span> Class&lt;T&gt; targetType)</span> &#123;</span><br><span class="line">		<span class="keyword">if</span> (targetType == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> (T) value;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="type">ConversionService</span> <span class="variable">conversionServiceToUse</span> <span class="operator">=</span> <span class="built_in">this</span>.conversionService;</span><br><span class="line">		<span class="keyword">if</span> (conversionServiceToUse == <span class="literal">null</span>) &#123;</span><br><span class="line">			<span class="comment">// Avoid initialization of shared DefaultConversionService if</span></span><br><span class="line">			<span class="comment">// no standard type conversion is needed in the first place...</span></span><br><span class="line">			<span class="keyword">if</span> (ClassUtils.isAssignableValue(targetType, value)) &#123;</span><br><span class="line">				<span class="keyword">return</span> (T) value;</span><br><span class="line">			&#125;</span><br><span class="line">			conversionServiceToUse = DefaultConversionService.getSharedInstance();</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> conversionServiceToUse.convert(value, targetType);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//模板方法模式 此方法留个子类去实现</span></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">protected</span> <span class="keyword">abstract</span> String <span class="title function_">getPropertyAsRawString</span><span class="params">(String key)</span>;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">PropertyPlaceholderHelper</span> &#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Log</span> <span class="variable">logger</span> <span class="operator">=</span> LogFactory.getLog(PropertyPlaceholderHelper.class);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Map&lt;String, String&gt; wellKnownSimplePrefixes = <span class="keyword">new</span> <span class="title class_">HashMap</span>&lt;&gt;(<span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		wellKnownSimplePrefixes.put(<span class="string">&quot;&#125;&quot;</span>, <span class="string">&quot;&#123;&quot;</span>);</span><br><span class="line">		wellKnownSimplePrefixes.put(<span class="string">&quot;]&quot;</span>, <span class="string">&quot;[&quot;</span>);</span><br><span class="line">		wellKnownSimplePrefixes.put(<span class="string">&quot;)&quot;</span>, <span class="string">&quot;(&quot;</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> String placeholderPrefix;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> String placeholderSuffix;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> String simplePrefix;</span><br><span class="line"></span><br><span class="line">	<span class="meta">@Nullable</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> String valueSeparator;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">final</span> <span class="type">boolean</span> ignoreUnresolvablePlaceholders;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//构造器</span></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">PropertyPlaceholderHelper</span><span class="params">(String placeholderPrefix, String placeholderSuffix)</span> &#123;</span><br><span class="line">		<span class="built_in">this</span>(placeholderPrefix, placeholderSuffix, <span class="literal">null</span>, <span class="literal">true</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//构造器</span></span><br><span class="line">	<span class="keyword">public</span> <span class="title function_">PropertyPlaceholderHelper</span><span class="params">(String placeholderPrefix, String placeholderSuffix,</span></span><br><span class="line"><span class="params">			<span class="meta">@Nullable</span> String valueSeparator, <span class="type">boolean</span> ignoreUnresolvablePlaceholders)</span> &#123;</span><br><span class="line"></span><br><span class="line">		Assert.notNull(placeholderPrefix, <span class="string">&quot;&#x27;placeholderPrefix&#x27; must not be null&quot;</span>);</span><br><span class="line">		Assert.notNull(placeholderSuffix, <span class="string">&quot;&#x27;placeholderSuffix&#x27; must not be null&quot;</span>);</span><br><span class="line">		<span class="built_in">this</span>.placeholderPrefix = placeholderPrefix;</span><br><span class="line">		<span class="built_in">this</span>.placeholderSuffix = placeholderSuffix;</span><br><span class="line">		<span class="type">String</span> <span class="variable">simplePrefixForSuffix</span> <span class="operator">=</span> wellKnownSimplePrefixes.get(<span class="built_in">this</span>.placeholderSuffix);</span><br><span class="line">		<span class="keyword">if</span> (simplePrefixForSuffix != <span class="literal">null</span> &amp;&amp; <span class="built_in">this</span>.placeholderPrefix.endsWith(simplePrefixForSuffix)) &#123;</span><br><span class="line">			<span class="built_in">this</span>.simplePrefix = simplePrefixForSuffix;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">else</span> &#123;</span><br><span class="line">			<span class="built_in">this</span>.simplePrefix = <span class="built_in">this</span>.placeholderPrefix;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="built_in">this</span>.valueSeparator = valueSeparator;</span><br><span class="line">		<span class="built_in">this</span>.ignoreUnresolvablePlaceholders = ignoreUnresolvablePlaceholders;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">	</span><br><span class="line">	<span class="comment">//利用Properties里面的属性对value中的占位符进行替换解析</span></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">replacePlaceholders</span><span class="params">(String value, <span class="keyword">final</span> Properties properties)</span> &#123;</span><br><span class="line">		Assert.notNull(properties, <span class="string">&quot;&#x27;properties&#x27; must not be null&quot;</span>);</span><br><span class="line">		<span class="keyword">return</span> replacePlaceholders(value, properties::getProperty);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> String <span class="title function_">replacePlaceholders</span><span class="params">(String value, PlaceholderResolver placeholderResolver)</span> &#123;</span><br><span class="line">		<span class="comment">//不解析值为null的值</span></span><br><span class="line">		Assert.notNull(value, <span class="string">&quot;&#x27;value&#x27; must not be null&quot;</span>);</span><br><span class="line">		<span class="comment">//字符串值进行解析</span></span><br><span class="line">		<span class="keyword">return</span> parseStringValue(value, placeholderResolver, <span class="literal">null</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">protected</span> String <span class="title function_">parseStringValue</span><span class="params">(</span></span><br><span class="line"><span class="params">			String value, PlaceholderResolver placeholderResolver, <span class="meta">@Nullable</span> Set&lt;String&gt; visitedPlaceholders)</span> &#123;</span><br><span class="line">		<span class="comment">//这个地方有个很有意思的地方 占位符助手类的前缀，后缀，分隔符都是依赖注入的，这让这个类更具有适用性</span></span><br><span class="line">		<span class="type">int</span> <span class="variable">startIndex</span> <span class="operator">=</span> value.indexOf(<span class="built_in">this</span>.placeholderPrefix);</span><br><span class="line">		<span class="comment">//如果找不到占位符前缀  直接就当做非占位符的值了 直接返回</span></span><br><span class="line">		<span class="keyword">if</span> (startIndex == -<span class="number">1</span>) &#123;</span><br><span class="line">			<span class="keyword">return</span> value;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">		<span class="type">StringBuilder</span> <span class="variable">result</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuilder</span>(value);</span><br><span class="line">		<span class="keyword">while</span> (startIndex != -<span class="number">1</span>) &#123;</span><br><span class="line">			<span class="comment">//找最近的占位结束符的下标</span></span><br><span class="line">			<span class="type">int</span> <span class="variable">endIndex</span> <span class="operator">=</span> findPlaceholderEndIndex(result, startIndex);</span><br><span class="line">			<span class="comment">//找到了结束占位符</span></span><br><span class="line">			<span class="keyword">if</span> (endIndex != -<span class="number">1</span>) &#123;</span><br><span class="line">				<span class="comment">//截取占位符表达式中间的内容</span></span><br><span class="line">				<span class="type">String</span> <span class="variable">placeholder</span> <span class="operator">=</span> result.substring(startIndex + <span class="built_in">this</span>.placeholderPrefix.length(), endIndex);</span><br><span class="line">				<span class="type">String</span> <span class="variable">originalPlaceholder</span> <span class="operator">=</span> placeholder;</span><br><span class="line">				<span class="keyword">if</span> (visitedPlaceholders == <span class="literal">null</span>) &#123;</span><br><span class="line">					visitedPlaceholders = <span class="keyword">new</span> <span class="title class_">HashSet</span>&lt;&gt;(<span class="number">4</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">//防止循环解析这种情况 比如 p1 = $&#123;p2&#125; p2 = &#123;p1&#125;的情况 因为这个方法在获取到值了之后会判断值是不是也是</span></span><br><span class="line">				<span class="comment">//包含了占位符 如果包含了就会进行解析 所以可能会发生循环解析的情况</span></span><br><span class="line">				<span class="keyword">if</span> (!visitedPlaceholders.add(originalPlaceholder)) &#123;</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(</span><br><span class="line">							<span class="string">&quot;Circular placeholder reference &#x27;&quot;</span> + originalPlaceholder + <span class="string">&quot;&#x27; in property definitions&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="comment">// Recursive invocation, parsing placeholders contained in the placeholder key.</span></span><br><span class="line">				<span class="comment">//对占位符中间的内容进行再一次解析 递归</span></span><br><span class="line">				placeholder = parseStringValue(placeholder, placeholderResolver, visitedPlaceholders);</span><br><span class="line">				<span class="comment">// Now obtain the value for the fully resolved key...</span></span><br><span class="line">				<span class="comment">//对最终处理完的占位符中间的内容获取对应的值</span></span><br><span class="line">				<span class="type">String</span> <span class="variable">propVal</span> <span class="operator">=</span> placeholderResolver.resolvePlaceholder(placeholder);</span><br><span class="line">				<span class="comment">//值为空 且包含了占位符表达式的默认值算法即$&#123;a : b&#125;这种  当a的值为空的时候 会取b的值</span></span><br><span class="line">				<span class="keyword">if</span> (propVal == <span class="literal">null</span> &amp;&amp; <span class="built_in">this</span>.valueSeparator != <span class="literal">null</span>) &#123;</span><br><span class="line">					<span class="comment">//获取分隔符的位置 此处的分隔符也是注入进来的  可以试一下到时候用其他的分隔符</span></span><br><span class="line">					<span class="type">int</span> <span class="variable">separatorIndex</span> <span class="operator">=</span> placeholder.indexOf(<span class="built_in">this</span>.valueSeparator);</span><br><span class="line">					<span class="keyword">if</span> (separatorIndex != -<span class="number">1</span>) &#123;</span><br><span class="line">						<span class="comment">//根据分隔符位置进行截取 前半部分 为原值</span></span><br><span class="line">						<span class="type">String</span> <span class="variable">actualPlaceholder</span> <span class="operator">=</span> placeholder.substring(<span class="number">0</span>, separatorIndex);</span><br><span class="line">						<span class="comment">//根据分隔符位置进行截取 后半部分 为默认值</span></span><br><span class="line">						<span class="type">String</span> <span class="variable">defaultValue</span> <span class="operator">=</span> placeholder.substring(separatorIndex + <span class="built_in">this</span>.valueSeparator.length());</span><br><span class="line">						<span class="comment">//对截取完后的原值部分进行值解析 因为之前包含了默认值操作符会影响到解析</span></span><br><span class="line">						propVal = placeholderResolver.resolvePlaceholder(actualPlaceholder);</span><br><span class="line">						<span class="keyword">if</span> (propVal == <span class="literal">null</span>) &#123;</span><br><span class="line">							<span class="comment">//解析失败使用原值</span></span><br><span class="line">							propVal = defaultValue;</span><br><span class="line">						&#125;</span><br><span class="line">					&#125;</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">if</span> (propVal != <span class="literal">null</span>) &#123;</span><br><span class="line">					<span class="comment">// Recursive invocation, parsing placeholders contained in the</span></span><br><span class="line">					<span class="comment">// previously resolved placeholder value.</span></span><br><span class="line">					<span class="comment">//值不为空 对值进行占位符解析 之前说的可能发生循环解析的情况就是要走到这里</span></span><br><span class="line">					propVal = parseStringValue(propVal, placeholderResolver, visitedPlaceholders);</span><br><span class="line">					<span class="comment">//替换掉已解析的部分 用的是StringBuilder没用String很重要</span></span><br><span class="line">					result.replace(startIndex, endIndex + <span class="built_in">this</span>.placeholderSuffix.length(), propVal);</span><br><span class="line">					<span class="keyword">if</span> (logger.isTraceEnabled()) &#123;</span><br><span class="line">						logger.trace(<span class="string">&quot;Resolved placeholder &#x27;&quot;</span> + placeholder + <span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">					&#125;</span><br><span class="line">					<span class="comment">//重新获取要解析的下标</span></span><br><span class="line">					startIndex = result.indexOf(<span class="built_in">this</span>.placeholderPrefix, startIndex + propVal.length());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> <span class="keyword">if</span> (<span class="built_in">this</span>.ignoreUnresolvablePlaceholders) &#123;</span><br><span class="line">					<span class="comment">// Proceed with unprocessed value.</span></span><br><span class="line">					startIndex = result.indexOf(<span class="built_in">this</span>.placeholderPrefix, endIndex + <span class="built_in">this</span>.placeholderSuffix.length());</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">IllegalArgumentException</span>(<span class="string">&quot;Could not resolve placeholder &#x27;&quot;</span> +</span><br><span class="line">							placeholder + <span class="string">&quot;&#x27;&quot;</span> + <span class="string">&quot; in value \&quot;&quot;</span> + value + <span class="string">&quot;\&quot;&quot;</span>);</span><br><span class="line">				&#125;</span><br><span class="line">				visitedPlaceholders.remove(originalPlaceholder);</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				startIndex = -<span class="number">1</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> result.toString();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//查找占位符中结束符在字符串中的位置 功能看起来是查找占位起始符位置之后最近的一个占位结束符的位置</span></span><br><span class="line">	<span class="keyword">private</span> <span class="type">int</span> <span class="title function_">findPlaceholderEndIndex</span><span class="params">(CharSequence buf, <span class="type">int</span> startIndex)</span> &#123;</span><br><span class="line">		<span class="type">int</span> <span class="variable">index</span> <span class="operator">=</span> startIndex + <span class="built_in">this</span>.placeholderPrefix.length();</span><br><span class="line">		<span class="type">int</span> <span class="variable">withinNestedPlaceholder</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span> (index &lt; buf.length()) &#123;</span><br><span class="line">			<span class="keyword">if</span> (StringUtils.substringMatch(buf, index, <span class="built_in">this</span>.placeholderSuffix)) &#123;</span><br><span class="line">				<span class="keyword">if</span> (withinNestedPlaceholder &gt; <span class="number">0</span>) &#123;</span><br><span class="line">					withinNestedPlaceholder--;</span><br><span class="line">					index = index + <span class="built_in">this</span>.placeholderSuffix.length();</span><br><span class="line">				&#125;</span><br><span class="line">				<span class="keyword">else</span> &#123;</span><br><span class="line">					<span class="keyword">return</span> index;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="comment">//这个地方主要是兼容&#123;&#123; &#125;&#125;的情况的配合上面的withinNestedPlaceholder》0的情况使用</span></span><br><span class="line">			<span class="keyword">else</span> <span class="keyword">if</span> (StringUtils.substringMatch(buf, index, <span class="built_in">this</span>.simplePrefix)) &#123;</span><br><span class="line">				withinNestedPlaceholder++;</span><br><span class="line">				index = index + <span class="built_in">this</span>.simplePrefix.length();</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">else</span> &#123;</span><br><span class="line">				index++;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="comment">//接口 这边多用lambda来实现这个接口</span></span><br><span class="line">	<span class="meta">@FunctionalInterface</span></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">interface</span> <span class="title class_">PlaceholderResolver</span> &#123;</span><br><span class="line"></span><br><span class="line">		<span class="meta">@Nullable</span></span><br><span class="line">		String <span class="title function_">resolvePlaceholder</span><span class="params">(String placeholderName)</span>;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/spring/" rel="tag"># spring</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/03/Spring-Core%E6%BA%90%E7%A0%81-Profiles,ProfilesParser/" rel="next" title="Spring-Core源码-Profiles,ProfilesParser">
+                <i class="fa fa-chevron-left"></i> Spring-Core源码-Profiles,ProfilesParser
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/03/%E4%B8%80%E6%96%87%E8%AE%B2%E8%A7%A3javax.validation/" rel="prev" title="一文讲解javax.validation">
+                一文讲解javax.validation <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ozipin" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:908002873@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Spring-Core%E6%BA%90%E7%A0%81-PropertySourcesPropertyResolver%EF%BC%8CPropertySources%EF%BC%8CPropertySource%EF%BC%8CAbstractPropertyResolver%EF%BC%8CPropertyPlaceholderHelper"><span class="nav-number">1.</span> <span class="nav-text">Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ozipin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

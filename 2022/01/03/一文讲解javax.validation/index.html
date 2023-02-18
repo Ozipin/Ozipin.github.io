@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="validation-api," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="javax.validation的使用及源码的详细介绍">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一文讲解javax.validation">
+<meta property="og:url" content="https://www.ozipin.com/2022/01/03/%E4%B8%80%E6%96%87%E8%AE%B2%E8%A7%A3javax.validation/index.html">
+<meta property="og:site_name" content="ozipin&#39;s blog">
+<meta property="og:description" content="javax.validation的使用及源码的详细介绍">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-01-03T08:07:49.000Z">
+<meta property="article:modified_time" content="2023-02-18T12:05:28.388Z">
+<meta property="article:author" content="Ozipin">
+<meta property="article:tag" content="validation-api">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.ozipin.com/2022/01/03/一文讲解javax.validation/"/>
+
+
+
+
+
+  <title>一文讲解javax.validation | ozipin's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/Ozipin" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ozipin's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">热爱技术，享受生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ozipin.com/2022/01/03/%E4%B8%80%E6%96%87%E8%AE%B2%E8%A7%A3javax.validation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ozipin's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一文讲解javax.validation</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-03T16:07:49+08:00">
+                2022-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  javax.validation的使用及源码的详细介绍
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一文讲解javax-validation"><a href="#一文讲解javax-validation" class="headerlink" title="一文讲解javax.validation"></a>一文讲解javax.validation</h2><h3 id="1-javax-validation"><a href="#1-javax-validation" class="headerlink" title="1.javax.validation"></a>1.javax.validation</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Bean Validation是Java定义的一套基于注解/xml的数据校验规范</span><br><span class="line">已经从JSR 303的1.0版本升级到JSR 349的1.1版本，再到JSR 380的2.0版本</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意：类似于Spring中的对于@Resource和@Inject等JSR注解的支持，JSR规范本身不提供其实现，都是由支持规范相关的框架去遵守实现，javax.validation最常见的实现是hibernate-validator，示例依赖如下：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- statrt validation-api --&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">	&lt;groupId&gt;javax.validation&lt;/groupId&gt;</span><br><span class="line">	&lt;artifactId&gt;validation-api&lt;/artifactId&gt;</span><br><span class="line">	&lt;version&gt;2.0.1.Final&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">		</span><br><span class="line">&lt;!-- start hibernate-validator--&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.hibernate.validator&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;hibernate-validator&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;6.0.13.Final&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-基础用法"><a href="#2-基础用法" class="headerlink" title="2.基础用法"></a>2.基础用法</h3><p>以<code>2.0.1.Final</code>版为例，<code>javax.validation.constraints</code>包下有<code>AssertFalse</code>，<code>AssertTrue</code>，<code>DecimalMax</code>，<code>DecimalMin</code>，<code>Digits</code>，<code>Email</code>，<code>Future</code>，<code>FutureOrPresent</code>，<code>Max</code>，<code>Min</code>，<code>Negative</code>，<code>NegativeOrZero</code>，<code>NotBlank</code>，<code>NotEmpty</code>，<code>NotNull</code>，<code>Null</code>，<code>Past</code>，<code>PastOrPresent</code>，<code>Pattern</code>，<code>Positive</code>，<code>PositiveOrZero</code>，<code>Size</code>共计22个注解可以使用，具体的使用场景如下(注意：此处使用的是<code>hibernate-validator</code>实现的验证器，每个字段的扩展说明的情况可能会是<code>hibernate-validator</code>独有的，如使用了其他的验证器，需要自行验证相关情况):</p>
+<h4 id="AssertFalse"><a href="#AssertFalse" class="headerlink" title="AssertFalse"></a>AssertFalse</h4><h5 id="使用示例"><a href="#使用示例" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.AssertFalse;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.AssertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AssertTrue(message = &quot;条件一必须为true&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> trueCondition;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@AssertFalse(message = &quot;条件二必须为false&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> <span class="type">boolean</span> falseCondition;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果"><a href="#手动验证代码及输出结果" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setTrueCondition(<span class="literal">true</span>).setFalseCondition(<span class="literal">false</span>);</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setTrueCondition(<span class="literal">false</span>).setFalseCondition(<span class="literal">true</span>);</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertEquals(<span class="number">2</span>, allErrors.size());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">0</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">1</span>).getDefaultMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明"><a href="#使用场景说明" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>AssertFalse</code>即验证被注解的字段是否是<code>false</code>值，当值为<code>true</code>的时候就会验证不通过。</p>
+<h5 id="扩展说明"><a href="#扩展说明" class="headerlink" title="扩展说明"></a>扩展说明</h5><p>​	此注解被用于其他类型的数据（除<code>Boolean</code>外）则会提示找不到指定类型的验证器；当此注解被用于<code>Boolean</code>类型时，而被验证的值实际是<code>null</code>时，验证器并不会提示错误</p>
+<h4 id="AssertTrue"><a href="#AssertTrue" class="headerlink" title="AssertTrue"></a>AssertTrue</h4><h5 id="使用示例-1"><a href="#使用示例-1" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>AssertFalse</code></p>
+<h5 id="手动验证代码及输出结果-1"><a href="#手动验证代码及输出结果-1" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>AssertFalse</code></p>
+<h5 id="使用场景说明-1"><a href="#使用场景说明-1" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>AssertTrue</code>即验证被注解的字段是否是<code>true</code>值，当值为<code>false</code>的时候就会验证不通过。</p>
+<h5 id="扩展说明-1"><a href="#扩展说明-1" class="headerlink" title="扩展说明"></a>扩展说明</h5><p>​	参见<code>AssertFalse</code></p>
+<h4 id="DecimalMax"><a href="#DecimalMax" class="headerlink" title="DecimalMax"></a>DecimalMax</h4><h5 id="使用示例-2"><a href="#使用示例-2" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">package com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line">import lombok.Data;</span><br><span class="line">import lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line">import javax.validation.constraints.AssertFalse;</span><br><span class="line">import javax.validation.constraints.AssertTrue;</span><br><span class="line">import javax.validation.constraints.DecimalMax;</span><br><span class="line">import javax.validation.constraints.DecimalMin;</span><br><span class="line">import java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line">@Data</span><br><span class="line">@Accessors(chain = true)</span><br><span class="line">public class ValidationModel &#123;</span><br><span class="line"></span><br><span class="line">    @DecimalMax(value = &quot;100.01&quot;, message = &quot;最大值不能超过100.01&quot;)</span><br><span class="line">    private BigDecimal max;</span><br><span class="line"></span><br><span class="line">    @DecimalMin(value = &quot;20.01&quot;, message = &quot;最小值不能小于20.01&quot;)</span><br><span class="line">    private BigDecimal min;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-2"><a href="#手动验证代码及输出结果-2" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setMax(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">100.00</span>)).setMin(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">20.02</span>));</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setMax(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">100.02</span>)).setMin(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="number">20.00</span>));</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertEquals(<span class="number">2</span>, allErrors.size());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">0</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">1</span>).getDefaultMessage());</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>();</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        log.info(<span class="string">&quot;size:&#123;&#125;&quot;</span>, allErrors.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-2"><a href="#使用场景说明-2" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>DecimalMax</code>即限制被注解的字段的最大数值，当值大于限制条件时，验证不通过。</p>
+<h5 id="拓展说明"><a href="#拓展说明" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	注解中的<code>value</code>值虽然是个<code>string</code>字段，但在实际校验的时候，还是要转化为<code>number</code>类型，所以需要是一个合法的数字；注解不仅能用于数值类型的字段，也可用于<code>string</code>类型的字段，当值的格式能被正确格式化为数值时，即可正确运行，当数值不能被正确格式化时则会直接将写在注解里的错误信息予以提示；当被注解的字段值是<code>null</code>时，验证器并不会提示错误信息。</p>
+<h4 id="DecimalMin"><a href="#DecimalMin" class="headerlink" title="DecimalMin"></a>DecimalMin</h4><h5 id="使用示例-3"><a href="#使用示例-3" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>DecimalMax</code></p>
+<h5 id="手动验证代码及输出结果-3"><a href="#手动验证代码及输出结果-3" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>DecimalMax</code></p>
+<h5 id="使用场景说明-3"><a href="#使用场景说明-3" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>DecimalMin</code>即限制被注解的字段的最小数值，当值小于限制条件时，验证不通过。</p>
+<h5 id="拓展说明-1"><a href="#拓展说明-1" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>DecimalMax</code></p>
+<h4 id="Digits"><a href="#Digits" class="headerlink" title="Digits"></a>Digits</h4><h5 id="使用示例-4"><a href="#使用示例-4" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.*;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Digits(integer = 4, fraction = 2, message = &quot;BigDecimal校验失败&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> BigDecimal bDigits;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Digits(integer = 4, fraction = 2, message = &quot;Double校验失败&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Double dDigits;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Digits(integer = 4, fraction = 2, message = &quot;String校验失败&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String sDigits;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Digits(integer = 4, fraction = 0, message = &quot;Long校验失败&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long lDigits;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-4"><a href="#手动验证代码及输出结果-4" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setBDigits(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="string">&quot;1000.01&quot;</span>))</span><br><span class="line">                .setDDigits(<span class="number">100.01D</span>).setSDigits(<span class="string">&quot;1000&quot;</span>).setLDigits(<span class="number">1000L</span>);</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setBDigits(<span class="keyword">new</span> <span class="title class_">BigDecimal</span>(<span class="string">&quot;1000.001&quot;</span>))</span><br><span class="line">                .setDDigits(<span class="number">10000.01D</span>).setSDigits(<span class="string">&quot;10000.001&quot;</span>);;</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertEquals(<span class="number">3</span>, allErrors.size());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">0</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">1</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">2</span>).getDefaultMessage());</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>();</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        log.info(<span class="string">&quot;size:&#123;&#125;&quot;</span>, allErrors.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-4"><a href="#使用场景说明-4" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Digits</code>即限制数值的格式，分两部分进行限制，分别是<code>integer</code>（整数部分）和<code>fraction</code>（小数部分），用于限制被注解的数值的整数部分长度小于注解配置的整数部分的长度，小数部分的长度也小于注解配置的小数部分的长度，任一校验不通过即校验不通过。</p>
+<h5 id="拓展说明-2"><a href="#拓展说明-2" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	注解不仅能用于数值类型的字段，也可用于<code>string</code>类型的字段，当值的格式能被正确格式化为数值时，即可正确运行，当数值不能被正确格式化时则会直接将写在注解里的错误信息予以提示；当被注解的字段值是<code>null</code>时，验证器并不会提示错误信息。</p>
+<h4 id="Email"><a href="#Email" class="headerlink" title="Email"></a>Email</h4><h5 id="使用示例-5"><a href="#使用示例-5" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.*;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Email(message = &quot;邮箱地址不合法&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String mailAddress;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-5"><a href="#手动验证代码及输出结果-5" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setMailAddress(<span class="string">&quot;1234@qq.com&quot;</span>);</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>().setMailAddress(<span class="string">&quot;111111&quot;</span>);</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertEquals(<span class="number">1</span>, allErrors.size());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">0</span>).getDefaultMessage());</span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>();</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        log.info(<span class="string">&quot;size:&#123;&#125;&quot;</span>, allErrors.size());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-5"><a href="#使用场景说明-5" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Email</code>用于验证数据是否是一个合法的邮箱地址，主要配置项有<code>regexp</code>和<code>flags</code>两个，主要用于设置邮箱匹配的正则表达式和正则表达式的匹配模式（各模式的区别此处不做展开）。当我们不做<code>regexp</code>的设置时，在数据验证的时候会使用其默认的正则表达式<code>.*</code>来进行验证，即含有<code>.</code>的地址都可被视为一个合法的邮箱，当默认的匹配规则不能满足我们的需求时，我们就要自己设置了。</p>
+<h5 id="拓展说明-3"><a href="#拓展说明-3" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	由于<code>Email</code>本质是使用正则表达式来进行的实现，所以我们也能用<code>Pattern</code>来实现相关的验证。空值不会触发相关的验证。</p>
+<h4 id="Future"><a href="#Future" class="headerlink" title="Future"></a>Future</h4><h5 id="使用示例-6"><a href="#使用示例-6" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.*;</span><br><span class="line"><span class="keyword">import</span> java.math.BigDecimal;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Future(message = &quot;时间必须大于此刻&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date future;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@FutureOrPresent(message = &quot;时间必须大于等于此刻&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date futureOrPresent;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Past(message = &quot;时间必须小于此刻&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date past;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PastOrPresent(message = &quot;时间必须小于等于此刻&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Date pastOrPresent;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ValidationModel</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.future = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        <span class="built_in">this</span>.futureOrPresent = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        <span class="built_in">this</span>.past = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">        <span class="built_in">this</span>.pastOrPresent = <span class="keyword">new</span> <span class="title class_">Date</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ValidationModel</span><span class="params">(Date future, Date past)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.future = future;</span><br><span class="line">        <span class="built_in">this</span>.futureOrPresent = future;</span><br><span class="line">        <span class="built_in">this</span>.past = past;</span><br><span class="line">        <span class="built_in">this</span>.pastOrPresent = past;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">ValidationModel</span><span class="params">(Date future, Date futureOrPresent, Date past, Date pastOrPresent)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.future = future;</span><br><span class="line">        <span class="built_in">this</span>.futureOrPresent = futureOrPresent;</span><br><span class="line">        <span class="built_in">this</span>.past = past;</span><br><span class="line">        <span class="built_in">this</span>.pastOrPresent = pastOrPresent;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-6"><a href="#手动验证代码及输出结果-6" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.util.Calendar;</span><br><span class="line"><span class="keyword">import</span> java.util.Date;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>(millisToDate(System.currentTimeMillis() + <span class="number">500L</span>), <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line"></span><br><span class="line">        validationModel = <span class="keyword">new</span> <span class="title class_">ValidationModel</span>(<span class="keyword">new</span> <span class="title class_">Date</span>(), <span class="keyword">new</span> <span class="title class_">Date</span>());</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isNotEmpty(allErrors));</span><br><span class="line">        assertEquals(<span class="number">2</span>, allErrors.size());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     *  毫秒时间戳转时间</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> millis 时间戳</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> Date&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> Date <span class="title function_">millisToDate</span><span class="params">(Long millis)</span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(Objects.isNull(millis))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">Calendar</span> <span class="variable">calendar</span> <span class="operator">=</span> Calendar.getInstance();</span><br><span class="line">        calendar.setTimeInMillis(millis);</span><br><span class="line">        <span class="keyword">return</span> calendar.getTime();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-6"><a href="#使用场景说明-6" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Future</code>注解用于验证时间晚于系统当前时间。</p>
+<h5 id="拓展说明-4"><a href="#拓展说明-4" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	<code>Future</code>注解除了用于<code>Date</code>类型字段还可用于<code>Calendar</code>，<code>Instant</code>，<code>LocalDate</code>，<code>LocalDateTime等诸多时间类型。</code>空值不会触发相关的验证。</p>
+<h4 id="FutureOrPresent"><a href="#FutureOrPresent" class="headerlink" title="FutureOrPresent"></a>FutureOrPresent</h4><h5 id="使用示例-7"><a href="#使用示例-7" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>Future</code></p>
+<h5 id="手动验证代码及输出结果-7"><a href="#手动验证代码及输出结果-7" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>Future</code></p>
+<h5 id="使用场景说明-7"><a href="#使用场景说明-7" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>FutureOrPresent</code>注解用于验证时间晚于或等于系统当前时间。</p>
+<h5 id="拓展说明-5"><a href="#拓展说明-5" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>Future</code></p>
+<h4 id="Max"><a href="#Max" class="headerlink" title="Max"></a>Max</h4><h5 id="使用示例-8"><a href="#使用示例-8" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参考<code>DecimalMax</code></p>
+<h5 id="手动验证代码及输出结果-8"><a href="#手动验证代码及输出结果-8" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参考<code>DecimalMax</code></p>
+<h5 id="使用场景说明-8"><a href="#使用场景说明-8" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>		Max</code>即限制被注解的字段的最大数值，当值大于限制条件时，验证不通过。</p>
+<h5 id="拓展说明-6"><a href="#拓展说明-6" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参考<code>DecimalMax</code></p>
+<h4 id="Min"><a href="#Min" class="headerlink" title="Min"></a>Min</h4><h5 id="使用示例-9"><a href="#使用示例-9" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参考<code>DecimalMax</code></p>
+<h5 id="手动验证代码及输出结果-9"><a href="#手动验证代码及输出结果-9" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参考<code>DecimalMax</code></p>
+<h5 id="使用场景说明-9"><a href="#使用场景说明-9" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Min</code>即限制被注解的字段的最小数值，当值小于限制条件时，验证不通过。</p>
+<h5 id="拓展说明-7"><a href="#拓展说明-7" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参考<code>DecimalMax</code></p>
+<h4 id="Negative"><a href="#Negative" class="headerlink" title="Negative"></a>Negative</h4><h5 id="使用示例-10"><a href="#使用示例-10" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Negative;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NegativeOrZero;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Positive;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.PositiveOrZero;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Positive(message = &quot;值必须大于0&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long positive;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@PositiveOrZero(message = &quot;值必须大于等于0&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long positiveOrZero;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Negative(message = &quot;值必须小于0&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long negative;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NegativeOrZero(message = &quot;值必须小于等于0&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Long negativeOrZero;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-10"><a href="#手动验证代码及输出结果-10" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">package com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line">import lombok.extern.slf4j.Slf4j;</span><br><span class="line">import org.apache.commons.collections4.CollectionUtils;</span><br><span class="line">import org.junit.jupiter.api.Test;</span><br><span class="line">import org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line">import org.springframework.validation.Errors;</span><br><span class="line">import org.springframework.validation.ObjectError;</span><br><span class="line">import org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line">import javax.validation.Validation;</span><br><span class="line">import java.util.List;</span><br><span class="line"></span><br><span class="line">import static org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line">import static org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line">@Slf4j</span><br><span class="line">public class Validator &#123;</span><br><span class="line"></span><br><span class="line">    private static final javax.validation.Validator javaxValidator = Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    private static final SpringValidatorAdapter validator = new SpringValidatorAdapter(javaxValidator);</span><br><span class="line"></span><br><span class="line">    @Test</span><br><span class="line">    public void test1()&#123;</span><br><span class="line">        ValidationModel validationModel = new ValidationModel()</span><br><span class="line">                .setPositive(1L).setPositiveOrZero(0L)</span><br><span class="line">                .setNegative(-1L).setNegativeOrZero(0L);</span><br><span class="line">        Errors errors = new BeanPropertyBindingResult(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line"></span><br><span class="line">        validationModel = new ValidationModel()</span><br><span class="line">                .setPositive(0L).setPositiveOrZero(-1L)</span><br><span class="line">                .setNegative(0L).setNegativeOrZero(1L);</span><br><span class="line">        errors = new BeanPropertyBindingResult(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isNotEmpty(allErrors));</span><br><span class="line">        assertEquals(4, allErrors.size());</span><br><span class="line">        log.info(&quot;errorMsg:&#123;&#125;&quot;, allErrors.get(0).getDefaultMessage());</span><br><span class="line">        log.info(&quot;errorMsg:&#123;&#125;&quot;, allErrors.get(1).getDefaultMessage());</span><br><span class="line">        log.info(&quot;errorMsg:&#123;&#125;&quot;, allErrors.get(2).getDefaultMessage());</span><br><span class="line">        log.info(&quot;errorMsg:&#123;&#125;&quot;, allErrors.get(3).getDefaultMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-10"><a href="#使用场景说明-10" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Negative</code>用于限制被注解的值必须小于0，当值大于或等于0的时候即验证不通过。</p>
+<h5 id="拓展说明-8"><a href="#拓展说明-8" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	注解能用于各种数值类型；当被注解的字段值是<code>null</code>时，验证器并不会提示错误信息。</p>
+<h4 id="NegativeOrZero"><a href="#NegativeOrZero" class="headerlink" title="NegativeOrZero"></a>NegativeOrZero</h4><h5 id="使用示例-11"><a href="#使用示例-11" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	见<code>Negative</code></p>
+<h5 id="手动验证代码及输出结果-11"><a href="#手动验证代码及输出结果-11" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	见<code>Negative</code></p>
+<h5 id="使用场景说明-11"><a href="#使用场景说明-11" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Negative</code>用于限制被注解的值必须小于或等于0，当值大于0的时候即验证不通过。</p>
+<h5 id="拓展说明-9"><a href="#拓展说明-9" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	见<code>Negative</code></p>
+<h4 id="NotBlank"><a href="#NotBlank" class="headerlink" title="NotBlank"></a>NotBlank</h4><h5 id="使用示例-12"><a href="#使用示例-12" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotBlank;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotEmpty;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotNull;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Null;</span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;字段值不能为空或者&#x27;&#x27;&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String notBlankString;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotEmpty(message = &quot;集合不能为空&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Collection notEmptyCollection;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@NotNull(message = &quot;对象不能为空&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Object notNullObject;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Null(message = &quot;对象必须为空&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Object nullObject;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-12"><a href="#手动验证代码及输出结果-12" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Lists;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>()</span><br><span class="line">                .setNotBlankString(<span class="string">&quot;a&quot;</span>).setNotEmptyCollection(Lists.newArrayList(<span class="number">1</span>))</span><br><span class="line">                .setNotNullObject(<span class="keyword">new</span> <span class="title class_">Object</span>()).setNullObject(<span class="literal">null</span>);</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line"></span><br><span class="line">        validationModel =  <span class="keyword">new</span> <span class="title class_">ValidationModel</span>()</span><br><span class="line">                .setNotBlankString(<span class="string">&quot;&quot;</span>).setNotEmptyCollection(Lists.newArrayList())</span><br><span class="line">                .setNotNullObject(<span class="literal">null</span>).setNullObject(<span class="keyword">new</span> <span class="title class_">Object</span>());</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isNotEmpty(allErrors));</span><br><span class="line">        assertEquals(<span class="number">4</span>, allErrors.size());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">0</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">1</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">2</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">3</span>).getDefaultMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-12"><a href="#使用场景说明-12" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>NotBlank</code>主要验证字符串不为<code>null</code>也不是’’。</p>
+<h5 id="拓展说明-10"><a href="#拓展说明-10" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	暂无</p>
+<h4 id="NotEmpty"><a href="#NotEmpty" class="headerlink" title="NotEmpty"></a>NotEmpty</h4><h5 id="使用示例-13"><a href="#使用示例-13" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	见<code>NotBlank</code></p>
+<h5 id="手动验证代码及输出结果-13"><a href="#手动验证代码及输出结果-13" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	见<code>NotBlank</code></p>
+<h5 id="使用场景说明-13"><a href="#使用场景说明-13" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>NotEmpty</code>主要用于对集合类型数据的判断，主要判断集合不为<code>null</code>也不为空。</p>
+<h5 id="拓展说明-11"><a href="#拓展说明-11" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	见<code>NotBlank</code></p>
+<h4 id="NotNull"><a href="#NotNull" class="headerlink" title="NotNull"></a>NotNull</h4><h5 id="使用示例-14"><a href="#使用示例-14" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	见<code>NotBlank</code></p>
+<h5 id="手动验证代码及输出结果-14"><a href="#手动验证代码及输出结果-14" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	见<code>NotBlank</code></p>
+<h5 id="使用场景说明-14"><a href="#使用场景说明-14" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>NotNull</code>主要用于对象的判断，限制对象不为<code>null</code>。</p>
+<h5 id="拓展说明-12"><a href="#拓展说明-12" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	见<code>NotBlank</code></p>
+<h4 id="Null"><a href="#Null" class="headerlink" title="Null"></a>Null</h4><h5 id="使用示例-15"><a href="#使用示例-15" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	见<code>NotBlank</code></p>
+<h5 id="手动验证代码及输出结果-15"><a href="#手动验证代码及输出结果-15" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	见<code>NotBlank</code></p>
+<h5 id="使用场景说明-15"><a href="#使用场景说明-15" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>null</code>主要用于对象的判断，要求被验证的对象为<code>null</code>。</p>
+<h5 id="拓展说明-13"><a href="#拓展说明-13" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	见<code>NotBlank</code></p>
+<h4 id="Past"><a href="#Past" class="headerlink" title="Past"></a>Past</h4><h5 id="使用示例-16"><a href="#使用示例-16" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>Future</code></p>
+<h5 id="手动验证代码及输出结果-16"><a href="#手动验证代码及输出结果-16" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>Future</code></p>
+<h5 id="使用场景说明-16"><a href="#使用场景说明-16" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Past</code>主要用于验证时间早于系统当前时间。</p>
+<h5 id="拓展说明-14"><a href="#拓展说明-14" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>Future</code></p>
+<h4 id="PastOrPresent"><a href="#PastOrPresent" class="headerlink" title="PastOrPresent"></a>PastOrPresent</h4><h5 id="使用示例-17"><a href="#使用示例-17" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>Future</code></p>
+<h5 id="手动验证代码及输出结果-17"><a href="#手动验证代码及输出结果-17" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>Future</code></p>
+<h5 id="使用场景说明-17"><a href="#使用场景说明-17" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>PastOrPresent``主要用于验证时间早于或等于系统当前时间</code>。</p>
+<h5 id="拓展说明-15"><a href="#拓展说明-15" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>Future</code></p>
+<h4 id="Pattern"><a href="#Pattern" class="headerlink" title="Pattern"></a>Pattern</h4><h5 id="使用示例-18"><a href="#使用示例-18" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>Email</code>，需自己设置正则表达式。</p>
+<h5 id="手动验证代码及输出结果-18"><a href="#手动验证代码及输出结果-18" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>Email</code></p>
+<h5 id="使用场景说明-18"><a href="#使用场景说明-18" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Pattern</code>用于验证数据是否符合我们配置的正则表达式，主要配置项有<code>regexp</code>和<code>flags</code>两个，主要用于匹配的正则表达式和正则表达式的匹配模式（各模式的区别此处不做展开）。</p>
+<h5 id="拓展说明-16"><a href="#拓展说明-16" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>Email</code></p>
+<h4 id="Positive"><a href="#Positive" class="headerlink" title="Positive"></a>Positive</h4><h5 id="使用示例-19"><a href="#使用示例-19" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>Negative</code></p>
+<h5 id="手动验证代码及输出结果-19"><a href="#手动验证代码及输出结果-19" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>Negative</code></p>
+<h5 id="使用场景说明-19"><a href="#使用场景说明-19" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Positive</code>用于验证被注解的值大于0，当值小于或等于0的时候验证不通过。</p>
+<h5 id="拓展说明-17"><a href="#拓展说明-17" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>Negative</code></p>
+<h4 id="PositiveOrZero"><a href="#PositiveOrZero" class="headerlink" title="PositiveOrZero"></a>PositiveOrZero</h4><h5 id="使用示例-20"><a href="#使用示例-20" class="headerlink" title="使用示例"></a>使用示例</h5><p>​	参见<code>Negative</code></p>
+<h5 id="手动验证代码及输出结果-20"><a href="#手动验证代码及输出结果-20" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><p>​	参见<code>Negative</code></p>
+<h5 id="使用场景说明-20"><a href="#使用场景说明-20" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>PositiveOrZero</code>用于验证被注解的值大于或等于0，当值小于0的时候验证不通过。</p>
+<h5 id="拓展说明-18"><a href="#拓展说明-18" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	参见<code>Negative</code></p>
+<h4 id="Size"><a href="#Size" class="headerlink" title="Size"></a>Size</h4><h5 id="使用示例-21"><a href="#使用示例-21" class="headerlink" title="使用示例"></a>使用示例</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Size;</span><br><span class="line"><span class="keyword">import</span> java.util.Collection;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">ValidationModel</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Size(max = 2, min = 1, message = &quot;字段长度应该在1-2之间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String string;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Size(max = 2, min = 1, message = &quot;集合对象数量应该在1-2之间&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> Collection collection;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="手动验证代码及输出结果-21"><a href="#手动验证代码及输出结果-21" class="headerlink" title="手动验证代码及输出结果"></a>手动验证代码及输出结果</h5><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.validation;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Lists;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.junit.jupiter.api.Test;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertEquals;</span><br><span class="line"><span class="keyword">import</span> <span class="keyword">static</span> org.junit.jupiter.api.Assertions.assertTrue;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">Validator</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> javax.validation.<span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">test1</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="type">ValidationModel</span> <span class="variable">validationModel</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ValidationModel</span>()</span><br><span class="line">                .setString(<span class="string">&quot;a&quot;</span>).setCollection(Lists.newArrayList(<span class="number">1</span>));</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line"></span><br><span class="line">        validationModel =  <span class="keyword">new</span> <span class="title class_">ValidationModel</span>()</span><br><span class="line">                .setString(<span class="string">&quot;aaa&quot;</span>).setCollection(Lists.newArrayList(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>));</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isNotEmpty(allErrors));</span><br><span class="line">        assertEquals(<span class="number">2</span>, allErrors.size());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">0</span>).getDefaultMessage());</span><br><span class="line">        log.info(<span class="string">&quot;errorMsg:&#123;&#125;&quot;</span>, allErrors.get(<span class="number">1</span>).getDefaultMessage());</span><br><span class="line"></span><br><span class="line">        validationModel =  <span class="keyword">new</span> <span class="title class_">ValidationModel</span>();</span><br><span class="line">        errors = <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(validationModel, validationModel.getClass().getName());</span><br><span class="line">        validator.validate(validationModel, errors);</span><br><span class="line">        allErrors = errors.getAllErrors();</span><br><span class="line">        assertTrue(CollectionUtils.isEmpty(allErrors));</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="使用场景说明-21"><a href="#使用场景说明-21" class="headerlink" title="使用场景说明"></a>使用场景说明</h5><p>​	<code>Size</code>注解主要用于长度的限制，可以用于集合和字符串，用于限制其的最大和最小的长度或元素数量。</p>
+<h5 id="拓展说明-19"><a href="#拓展说明-19" class="headerlink" title="拓展说明"></a>拓展说明</h5><p>​	当值为<code>null</code>时不会触发验证</p>
+<h4 id="3-验证使用方式"><a href="#3-验证使用方式" class="headerlink" title="3.验证使用方式"></a>3.验证使用方式</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br></pre></td><td class="code"><pre><span class="line">非Spring项目主动验证:</span><br><span class="line">@Test</span><br><span class="line">public void test()&#123;</span><br><span class="line">    javax.validation.Validator javaxValidator = Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    ValidationModel validationModel = new ValidationModel();</span><br><span class="line">    Set&lt;ConstraintViolation&lt;ValidationModel&gt;&gt; set = javaxValidator.validate(validationModel);</span><br><span class="line">    log.info(&quot;size:&#123;&#125;&quot;, set.size());</span><br><span class="line">    log.info(&quot;set:&#123;&#125;&quot;, set);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spring项目中主动验证:</span><br><span class="line">@Test</span><br><span class="line">public void test()&#123;</span><br><span class="line">    javax.validation.Validator javaxValidator = Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    SpringValidatorAdapter validator = new SpringValidatorAdapter(javaxValidator);</span><br><span class="line">    ValidationModel validationModel = new ValidationModel();</span><br><span class="line">    Errors errors = new BeanPropertyBindingResult(validationModel, validationModel.getClass().getName());</span><br><span class="line">    validator.validate(validationModel, errors);</span><br><span class="line">    log.info(&quot;size:&#123;&#125;&quot;, errors.getAllErrors());</span><br><span class="line">    log.info(&quot;errors:&#123;&#125;&quot;, errors);</span><br><span class="line">&#125;</span><br><span class="line">注：主动验证在excle导入的时候很有用处</span><br><span class="line"></span><br><span class="line">spring项目中被动验证1:</span><br><span class="line">@ApiOperation(&quot;新增填报配置&quot;)</span><br><span class="line">@PostMapping(&quot;/add&quot;)</span><br><span class="line">public Result&lt;String&gt; add(@RequestBody @Valid FillAddReq fillAddReq) &#123;</span><br><span class="line">    log.info(&quot;add#fillAddReq:&#123;&#125;&quot;, fillAddReq);</span><br><span class="line">    //唯一键是否存在(填报事项+事业群作为唯一键)</span><br><span class="line">    int count = fillService.countByFillTypeAndBgCode(fillAddReq.getFillType(), fillAddReq.getBgCode());</span><br><span class="line">    Assert.isTrue(count == 0, &quot;此填报事项已存在指定事业群的配置&quot;);</span><br><span class="line">    //操作人信息</span><br><span class="line">    UserDetailInfo userDetailInfo = SessionTools.getCurrentUser();</span><br><span class="line">    int successCount = fillService.save(fillAddReq, userDetailInfo.getUserCode(), userDetailInfo.getUserName());</span><br><span class="line">    if (successCount &gt; 0) &#123;</span><br><span class="line">        return Result.success();</span><br><span class="line">    &#125;</span><br><span class="line">    return Result.DefaultFailure(&quot;新增失败&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spring项目中被动验证2：</span><br><span class="line">@ApiOperation(&quot;新增填报配置&quot;)</span><br><span class="line">@PostMapping(&quot;/add&quot;)</span><br><span class="line">public Result&lt;String&gt; add(@RequestBody @Validated FillAddReq fillAddReq) &#123;</span><br><span class="line">    log.info(&quot;add#fillAddReq:&#123;&#125;&quot;, fillAddReq);</span><br><span class="line">    //唯一键是否存在(填报事项+事业群作为唯一键)</span><br><span class="line">    int count = fillService.countByFillTypeAndBgCode(fillAddReq.getFillType(), fillAddReq.getBgCode());</span><br><span class="line">    Assert.isTrue(count == 0, &quot;此填报事项已存在指定事业群的配置&quot;);</span><br><span class="line">    //操作人信息</span><br><span class="line">    UserDetailInfo userDetailInfo = SessionTools.getCurrentUser();</span><br><span class="line">    int successCount = fillService.save(fillAddReq, userDetailInfo.getUserCode(), userDetailInfo.getUserName());</span><br><span class="line">    if (successCount &gt; 0) &#123;</span><br><span class="line">        return Result.success();</span><br><span class="line">    &#125;</span><br><span class="line">    return Result.DefaultFailure(&quot;新增失败&quot;);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spring项目中被动验证3:</span><br><span class="line">@Valid</span><br><span class="line">@Slf4j</span><br><span class="line">public static class ReportService&#123;</span><br><span class="line"></span><br><span class="line">    public List&lt;String&gt; getByMonth(@Size(max = 2, message = &quot;最多不能超过两个月份&quot;) List&lt;String&gt; monthList)&#123;</span><br><span class="line">        log.info(&quot;monthList:&#123;&#125;&quot;, monthList);</span><br><span class="line">        return Lists.newArrayList(&quot;202101&quot;, &quot;202102&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">spring项目中被动验证配合全局异常捕获:</span><br><span class="line">@ControllerAdvice</span><br><span class="line">@Slf4j</span><br><span class="line">public class MethodArgumentNotValidExceptionHandler &#123;</span><br><span class="line"></span><br><span class="line">    @ExceptionHandler(MethodArgumentNotValidException.class)</span><br><span class="line">    @Order(1)</span><br><span class="line">    @ResponseBody</span><br><span class="line">    public Result&lt;String&gt; handler(MethodArgumentNotValidException ex) &#123;</span><br><span class="line">        log.error(&quot;handler#Exception:&#123;&#125;-&#123;&#125;&quot;, ex.getMessage(), ex);</span><br><span class="line">        if (Objects.nonNull(ex) &amp;&amp; Objects.nonNull(ex.getBindingResult())</span><br><span class="line">            &amp;&amp; CollectionUtils.isNotEmpty(ex.getBindingResult().getFieldErrors())) &#123;</span><br><span class="line">            // 只提示一个</span><br><span class="line">            return Result.DefaultFailure(Iterables</span><br><span class="line">                .getFirst(ex.getBindingResult().getFieldErrors(), new FieldError(&quot;&quot;, &quot;&quot;, &quot;&quot;)).getDefaultMessage());</span><br><span class="line">        &#125;</span><br><span class="line">        return Result.DefaultFailure(ex.getMessage());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">注：利用全局异常捕获，自动处理验证失败信息,极度推荐</span><br><span class="line"></span><br><span class="line">嵌套验证:</span><br><span class="line">public class ValidationModel &#123;</span><br><span class="line"></span><br><span class="line">    @NotNull(message = &quot;不能为空&quot;)</span><br><span class="line">    private String str;</span><br><span class="line">    </span><br><span class="line">    @Valid</span><br><span class="line">    @Size(min = 1, message = &quot;用户不能为空&quot;)</span><br><span class="line">    private List&lt;User&gt; userList;</span><br><span class="line">    </span><br><span class="line">    @Data</span><br><span class="line">    public class User&#123;</span><br><span class="line">        </span><br><span class="line">        @NotBlank(message = &quot;用户名不能为空&quot;)</span><br><span class="line">        private String userName;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">分组验证:</span><br><span class="line">public class ValidationModel &#123;</span><br><span class="line"></span><br><span class="line">    @AssertTrue(groups = Pass.class)</span><br><span class="line">    @AssertFalse(groups = Reject.class)</span><br><span class="line">    private boolean pass;</span><br><span class="line"></span><br><span class="line">    @NotBlank(groups = Reject.class, message = &quot;请填写拒绝原因&quot;)</span><br><span class="line">    private String rejectReson;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="4-Valid和-Validated"><a href="#4-Valid和-Validated" class="headerlink" title="4.@Valid和@Validated"></a>4.@Valid和@Validated</h4><table>
+<thead>
+<tr>
+<th align="center">区别项</th>
+<th align="center">@Valid</th>
+<th align="center">@Validated</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">提供方</td>
+<td align="center">JSR</td>
+<td align="center">Spring</td>
+</tr>
+<tr>
+<td align="center">是否支持分组</td>
+<td align="center">不支持</td>
+<td align="center">支持</td>
+</tr>
+<tr>
+<td align="center">是否支持嵌套</td>
+<td align="center">支持</td>
+<td align="center">不支持</td>
+</tr>
+</tbody></table>
+<p><strong>猜想：两者之间的异同，目前暂未考量，只是自己的猜测结果。首先，javax.validation.Validator是支持分组验证的，所有的验证的入口最终都是调用此类的validate方法，之所以@Valid注解不支持分组是因为此注解内部没有任何内容，所以无法标识使用的验证组，故无法进行分组验证。至于为什么@Validated注解支持分页，也是因为其提供了一个分组参数，在标识之后会被spring解析代入进行分组验证。而@Validated无法支持嵌套验证问题也很简单，因为从@Valid到hibernate-validator再到spring的@Validated三者是从前往后出现的，故hibernate-validator在当初进行实现的时候只能针对@Valid做嵌套验证实现，@Validated看起来和@Valid很接近，其实应该理解为标识一个验证方法需要在此处执行更为准确，其本质是被spring的增强器识别，调用javax.validation.Validator的validate方法；而javax.validation.Validator对于@Validated是无从知晓的，所以无法做嵌套兼容的实现</strong></p>
+<h4 id="5-自定义注解"><a href="#5-自定义注解" class="headerlink" title="5.自定义注解"></a>5.自定义注解</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@Target(&#123;ElementType.METHOD, ElementType.FIELD&#125;)</span><br><span class="line">@Retention(RetentionPolicy.RUNTIME)</span><br><span class="line">@Documented</span><br><span class="line">@Constraint(</span><br><span class="line">        //此处关联了对应的验证器 记得配置</span><br><span class="line">        validatedBy = &#123;EncryptedValidator.class&#125;</span><br><span class="line">)</span><br><span class="line">public @interface Encrypted &#123;</span><br><span class="line"></span><br><span class="line">    String message() default &quot;&quot;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public class EncryptedValidator implements ConstraintValidator&lt;Encrypted, String&gt; &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) &#123;</span><br><span class="line">       // todo</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明:注解本身写法没有太多要求，只需要@Constraint注解标识出此注解可以被验证的类即可，EncryptedValidator实现类由两个泛型，第一个固定位需要验证的注解的类型，第二个为字段类型，实际执行过程中会根据注解上@Constraint所指示的类寻找验证实现，而后会根据字段类型选择匹配的验证实现，进行验证器的实例化，缓存，最后进行调用。</strong></p>
+<h4 id="6-实现机制"><a href="#6-实现机制" class="headerlink" title="6.实现机制"></a>6.实现机制</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">已知的是JSR规范只是定义了验证，并未进行实现，实际实现是使用了hibernate-validator。但是从上述的示例代码也可以看到，其实手动调用验证过程中完全没有引入hibernate-validator的相关类，但是实现确实是依赖于hibernate-validator来进行的。通过代码调试可以看到验证代码的开始是从Validation.buildDefaultValidatorFactory()作为入口的，追踪进入到GenericBootstrap.configure()方法进入到实现其实就是Validation的内部类GenericBootstrapImpl中的configure()方法，方法本身其实寻找ValidationProvider，由其来创建Configuration。追踪进入Validation的内部类DefaultValidationProviderResolver的run()方法，可以看到其对于ValidationProvider的加载是通过loadProviders()方法来实现的，观察loadProviders方法，则可以发现是使用了SPI机制来进行的实现类的发现(ServiceLoader类)。观察hibernate-validator报的META-INF目录下也能发现对应的对于SPI声明的配置。</span><br><span class="line"></span><br><span class="line">已知了hibernate-validator会对validation-api中的注解进行实现，则必然会有具体的验证实现类；而一般自定义注解，实现类其实是通过@Constraint注解作为自定义注解的元注解进行标识的，其值就表示了此自定义注解的所有验证实现，系统在进行验证实现的选择时会根据不同的数据类型进行匹配，选择对应的实现。但是validation-api的注解其本身@Constraint内容一般都是空的，所以需要hibernate-validator为其做特别的处理，即手动关联注解和其对应的验证实现。通过定位ValidatorFactory的实现ValidatorFactoryImpl发现其在初始化的时候实例化了一个ConstraintHelper对象，ConstraintHelper对象中即保存了validation-api中所有注解和对应的验证实现，通过观察其代码可以了解validation-api注解在hibernate-validator支持哪些类型字段，以及对应的验证实现是哪个类(即上面所描述的使用场景有所不全)。</span><br><span class="line"></span><br><span class="line">RequestResponseBodyMethodProcessor作为springmvc中参数解析转换的核心类，其在对参数进行转换的时候也进行验证，具体代码可见resolveArgument方法，根据resolveArgument方法的代码，可以看到其对于参数验证的处理的核心代码：</span><br><span class="line">protected void validateIfApplicable(WebDataBinder binder, MethodParameter parameter) &#123;</span><br><span class="line">	Annotation[] annotations = parameter.getParameterAnnotations();</span><br><span class="line">	for (Annotation ann : annotations) &#123;</span><br><span class="line">		Validated validatedAnn = AnnotationUtils.getAnnotation(ann, Validated.class);</span><br><span class="line">		if (validatedAnn != null || ann.annotationType().getSimpleName().startsWith(&quot;Valid&quot;)) &#123;</span><br><span class="line">			Object hints = (validatedAnn != null ? validatedAnn.value() : AnnotationUtils.getValue(ann));</span><br><span class="line">			Object[] validationHints = (hints instanceof Object[] ? (Object[]) hints : new Object[] &#123;hints&#125;);</span><br><span class="line">			binder.validate(validationHints);</span><br><span class="line">			break;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">看代码可知，其在处理请求方法的时候，只会针对Validated和Valid注解进行验证的触发；在Validated的时候会获取注解的value值即分组名，代入到验证器里面，进行分组验证</span><br><span class="line">	</span><br><span class="line">MethodValidationPostProcessor，作为实现了BeanPostProcessor接口的类，其本身必然会在类进行初始化的时候，进行增强。在此类的afterPropertiesSet方法可以发现，其将一个AnnotationMatchingPointcut和bean对象绑定已增强bean；观察AnnotationMatchingPointcut，其内部有一个AnnotationClassFilter，AnnotationClassFilter的入参为MethodValidationPostProcessor中的validatedAnnotationType（默认值为Validated），即此注解过滤器会只针对使用了Validated注解的类进行增强；作为一个后置处理器其必定会在BeanPostProcessor的postProcessBeforeInitialization和postProcessAfterInitialization方法，顺着MethodValidationPostProcessor往上寻找从AbstractBeanFactoryAwareAdvisingPostProcessor再到AbstractAdvisingBeanPostProcessor可以发现，AbstractAdvisingBeanPostProcessor的postProcessAfterInitialization方法，其核心就是利用子类生成的Advisor和目标类进行绑定增强，生成代理类</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id=""><a href="#" class="headerlink" title=""></a></h4>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/validation-api/" rel="tag"># validation-api</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/03/Spring-Core%E6%BA%90%E7%A0%81-PropertySourcesPropertyResolver%EF%BC%8CPropertySources%EF%BC%8CPropertySource%EF%BC%8CAbstractPropertyResolver%EF%BC%8CPropertyPlaceholde/" rel="next" title="Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper">
+                <i class="fa fa-chevron-left"></i> Spring-Core源码-PropertySourcesPropertyResolver，PropertySources，PropertySource，AbstractPropertyResolver，PropertyPlaceholderHelper
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/03/%E5%9F%BA%E4%BA%8EMybatis%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E7%9A%84%E5%AE%9E%E7%8E%B0/" rel="prev" title="基于Mybatis的数据权限的实现">
+                基于Mybatis的数据权限的实现 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ozipin" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:908002873@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E6%96%87%E8%AE%B2%E8%A7%A3javax-validation"><span class="nav-number">1.</span> <span class="nav-text">一文讲解javax.validation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-javax-validation"><span class="nav-number">1.1.</span> <span class="nav-text">1.javax.validation</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%9F%BA%E7%A1%80%E7%94%A8%E6%B3%95"><span class="nav-number">1.2.</span> <span class="nav-text">2.基础用法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#AssertFalse"><span class="nav-number">1.2.1.</span> <span class="nav-text">AssertFalse</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B"><span class="nav-number">1.2.1.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C"><span class="nav-number">1.2.1.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E"><span class="nav-number">1.2.1.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E8%AF%B4%E6%98%8E"><span class="nav-number">1.2.1.4.</span> <span class="nav-text">扩展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#AssertTrue"><span class="nav-number">1.2.2.</span> <span class="nav-text">AssertTrue</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-1"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-1"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-1"><span class="nav-number">1.2.2.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%A9%E5%B1%95%E8%AF%B4%E6%98%8E-1"><span class="nav-number">1.2.2.4.</span> <span class="nav-text">扩展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DecimalMax"><span class="nav-number">1.2.3.</span> <span class="nav-text">DecimalMax</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-2"><span class="nav-number">1.2.3.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-2"><span class="nav-number">1.2.3.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-2"><span class="nav-number">1.2.3.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E"><span class="nav-number">1.2.3.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#DecimalMin"><span class="nav-number">1.2.4.</span> <span class="nav-text">DecimalMin</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-3"><span class="nav-number">1.2.4.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-3"><span class="nav-number">1.2.4.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-3"><span class="nav-number">1.2.4.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-1"><span class="nav-number">1.2.4.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Digits"><span class="nav-number">1.2.5.</span> <span class="nav-text">Digits</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-4"><span class="nav-number">1.2.5.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-4"><span class="nav-number">1.2.5.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-4"><span class="nav-number">1.2.5.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-2"><span class="nav-number">1.2.5.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Email"><span class="nav-number">1.2.6.</span> <span class="nav-text">Email</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-5"><span class="nav-number">1.2.6.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-5"><span class="nav-number">1.2.6.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-5"><span class="nav-number">1.2.6.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-3"><span class="nav-number">1.2.6.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Future"><span class="nav-number">1.2.7.</span> <span class="nav-text">Future</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-6"><span class="nav-number">1.2.7.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-6"><span class="nav-number">1.2.7.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-6"><span class="nav-number">1.2.7.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-4"><span class="nav-number">1.2.7.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#FutureOrPresent"><span class="nav-number">1.2.8.</span> <span class="nav-text">FutureOrPresent</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-7"><span class="nav-number">1.2.8.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-7"><span class="nav-number">1.2.8.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-7"><span class="nav-number">1.2.8.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-5"><span class="nav-number">1.2.8.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Max"><span class="nav-number">1.2.9.</span> <span class="nav-text">Max</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-8"><span class="nav-number">1.2.9.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-8"><span class="nav-number">1.2.9.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-8"><span class="nav-number">1.2.9.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-6"><span class="nav-number">1.2.9.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Min"><span class="nav-number">1.2.10.</span> <span class="nav-text">Min</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-9"><span class="nav-number">1.2.10.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-9"><span class="nav-number">1.2.10.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-9"><span class="nav-number">1.2.10.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-7"><span class="nav-number">1.2.10.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Negative"><span class="nav-number">1.2.11.</span> <span class="nav-text">Negative</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-10"><span class="nav-number">1.2.11.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-10"><span class="nav-number">1.2.11.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-10"><span class="nav-number">1.2.11.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-8"><span class="nav-number">1.2.11.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NegativeOrZero"><span class="nav-number">1.2.12.</span> <span class="nav-text">NegativeOrZero</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-11"><span class="nav-number">1.2.12.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-11"><span class="nav-number">1.2.12.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-11"><span class="nav-number">1.2.12.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-9"><span class="nav-number">1.2.12.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NotBlank"><span class="nav-number">1.2.13.</span> <span class="nav-text">NotBlank</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-12"><span class="nav-number">1.2.13.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-12"><span class="nav-number">1.2.13.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-12"><span class="nav-number">1.2.13.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-10"><span class="nav-number">1.2.13.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NotEmpty"><span class="nav-number">1.2.14.</span> <span class="nav-text">NotEmpty</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-13"><span class="nav-number">1.2.14.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-13"><span class="nav-number">1.2.14.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-13"><span class="nav-number">1.2.14.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-11"><span class="nav-number">1.2.14.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NotNull"><span class="nav-number">1.2.15.</span> <span class="nav-text">NotNull</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-14"><span class="nav-number">1.2.15.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-14"><span class="nav-number">1.2.15.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-14"><span class="nav-number">1.2.15.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-12"><span class="nav-number">1.2.15.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Null"><span class="nav-number">1.2.16.</span> <span class="nav-text">Null</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-15"><span class="nav-number">1.2.16.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-15"><span class="nav-number">1.2.16.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-15"><span class="nav-number">1.2.16.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-13"><span class="nav-number">1.2.16.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Past"><span class="nav-number">1.2.17.</span> <span class="nav-text">Past</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-16"><span class="nav-number">1.2.17.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-16"><span class="nav-number">1.2.17.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-16"><span class="nav-number">1.2.17.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-14"><span class="nav-number">1.2.17.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PastOrPresent"><span class="nav-number">1.2.18.</span> <span class="nav-text">PastOrPresent</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-17"><span class="nav-number">1.2.18.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-17"><span class="nav-number">1.2.18.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-17"><span class="nav-number">1.2.18.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-15"><span class="nav-number">1.2.18.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pattern"><span class="nav-number">1.2.19.</span> <span class="nav-text">Pattern</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-18"><span class="nav-number">1.2.19.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-18"><span class="nav-number">1.2.19.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-18"><span class="nav-number">1.2.19.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-16"><span class="nav-number">1.2.19.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Positive"><span class="nav-number">1.2.20.</span> <span class="nav-text">Positive</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-19"><span class="nav-number">1.2.20.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-19"><span class="nav-number">1.2.20.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-19"><span class="nav-number">1.2.20.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-17"><span class="nav-number">1.2.20.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#PositiveOrZero"><span class="nav-number">1.2.21.</span> <span class="nav-text">PositiveOrZero</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-20"><span class="nav-number">1.2.21.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-20"><span class="nav-number">1.2.21.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-20"><span class="nav-number">1.2.21.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-18"><span class="nav-number">1.2.21.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Size"><span class="nav-number">1.2.22.</span> <span class="nav-text">Size</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B-21"><span class="nav-number">1.2.22.1.</span> <span class="nav-text">使用示例</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%89%8B%E5%8A%A8%E9%AA%8C%E8%AF%81%E4%BB%A3%E7%A0%81%E5%8F%8A%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C-21"><span class="nav-number">1.2.22.2.</span> <span class="nav-text">手动验证代码及输出结果</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E8%AF%B4%E6%98%8E-21"><span class="nav-number">1.2.22.3.</span> <span class="nav-text">使用场景说明</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%8B%93%E5%B1%95%E8%AF%B4%E6%98%8E-19"><span class="nav-number">1.2.22.4.</span> <span class="nav-text">拓展说明</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-%E9%AA%8C%E8%AF%81%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">1.2.23.</span> <span class="nav-text">3.验证使用方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-Valid%E5%92%8C-Validated"><span class="nav-number">1.2.24.</span> <span class="nav-text">4.@Valid和@Validated</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-%E8%87%AA%E5%AE%9A%E4%B9%89%E6%B3%A8%E8%A7%A3"><span class="nav-number">1.2.25.</span> <span class="nav-text">5.自定义注解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#6-%E5%AE%9E%E7%8E%B0%E6%9C%BA%E5%88%B6"><span class="nav-number">1.2.26.</span> <span class="nav-text">6.实现机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link"><span class="nav-number">1.2.27.</span> <span class="nav-text"></span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ozipin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

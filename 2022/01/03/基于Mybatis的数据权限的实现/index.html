@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="mybatis," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="基于Mybatis的查询拦截器实现数据权限的方案">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Mybatis的数据权限的实现">
+<meta property="og:url" content="https://www.ozipin.com/2022/01/03/%E5%9F%BA%E4%BA%8EMybatis%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E7%9A%84%E5%AE%9E%E7%8E%B0/index.html">
+<meta property="og:site_name" content="ozipin&#39;s blog">
+<meta property="og:description" content="基于Mybatis的查询拦截器实现数据权限的方案">
+<meta property="og:locale">
+<meta property="article:published_time" content="2022-01-03T08:13:49.000Z">
+<meta property="article:modified_time" content="2023-02-18T12:05:28.325Z">
+<meta property="article:author" content="Ozipin">
+<meta property="article:tag" content="mybatis">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.ozipin.com/2022/01/03/基于Mybatis的数据权限的实现/"/>
+
+
+
+
+
+  <title>基于Mybatis的数据权限的实现 | ozipin's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/Ozipin" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ozipin's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">热爱技术，享受生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ozipin.com/2022/01/03/%E5%9F%BA%E4%BA%8EMybatis%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E7%9A%84%E5%AE%9E%E7%8E%B0/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ozipin's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">基于Mybatis的数据权限的实现</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-03T16:13:49+08:00">
+                2022-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  基于Mybatis的查询拦截器实现数据权限的方案
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="基于Mybatis的数据权限的实现"><a href="#基于Mybatis的数据权限的实现" class="headerlink" title="基于Mybatis的数据权限的实现"></a>基于<code>Mybatis</code>的数据权限的实现</h2><p>​	实际开发中会遇到需要做数据权限的需求，通常的做法是将数据权限的参数代入到查询语句中，这样的方案实现起来简单快速，但是在遇到修改或者面临扩展的时候就很麻烦了，因为相关涉及到的查询语句都需要修改。可能通过<code>sql</code>语句引入等措施减少这种改动时需要调整的文件数量，但本文不重点关注这种方案。</p>
+<p>​	本文介绍的是一种新的方式来实现数据权限，基于注解和<code>mybatis</code>拦截器组合实现的数据权限。</p>
+<p>​	具体设计思路为：用户的数据权限在登录的时候存储在<code>session</code>或者<code>token</code>中，每一次请求的时候将数据权限信息存到指定的上下文<code>holder</code>中以便于<code>mybatis</code>拦截器的使用；自定义数据权限注解，用于在查询指定的表的时候动态的添加数据查询权限过滤条件；基于<code>mybatis</code>的查询拦截器，针对查询语句做拦截，解析注解，根据存储在指定上下文<code>holder</code>中的用户数据权限为查询语句动态的拼凑数据权限条件。</p>
+<p>​	具体实现代码示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Repeatable;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据权限</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="meta">@Repeatable(DataPermissions.class)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DataPermission &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 需要做数据权限的表名</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> String&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">tableName</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 表中bg编码列名</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> String&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">bgColumnName</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 表中地区编码列名</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> String&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">areaColumnName</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 表中网点编码列名</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> String&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    String <span class="title function_">netColumnName</span><span class="params">()</span> <span class="keyword">default</span> <span class="string">&quot;&quot;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据权限</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Target(&#123;ElementType.METHOD&#125;)</span></span><br><span class="line"><span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> DataPermissions &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 价值</span></span><br><span class="line"><span class="comment">     * 数据权限注解数组 设计成这样主要是针对数据权限遇到跨表查询的时候比较麻烦 你需要知道要为哪张表做数据权限</span></span><br><span class="line"><span class="comment">     * 可能同时为多张表做数据权限 所以可以通过多次使用DataPermission注解来实现</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@see</span> DataPermission</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    DataPermission[] value() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line"><span class="keyword">import</span> org.springframework.web.servlet.HandlerInterceptor;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据权限拦截器</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataAuthInterceptor</span> <span class="keyword">implements</span> <span class="title class_">HandlerInterceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> SystemAuthService systemAuthService;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">preHandle</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler)</span> <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="type">UserDetailInfo</span> <span class="variable">userDetailInfo</span> <span class="operator">=</span> SessionTools.getCurrentUser();</span><br><span class="line">        <span class="keyword">if</span>(Objects.isNull(userDetailInfo) || StringUtils.isBlank(userDetailInfo.getUserCode()))&#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">UserDataAuthInfoResp</span> <span class="variable">userDataAuthInfoResp</span> <span class="operator">=</span> systemAuthService.getDataAuth(userDetailInfo.getUserCode(), userDetailInfo.getDeptCode());</span><br><span class="line">        DataAuthHolder.addDataAuthInfo(userDataAuthInfoResp);</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">afterCompletion</span><span class="params">(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)</span></span><br><span class="line">            <span class="keyword">throws</span> Exception &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            HandlerInterceptor.<span class="built_in">super</span>.afterCompletion(request, response, handler, ex);</span><br><span class="line">        &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">            DataAuthHolder.removeCurUserDataAuthInfo();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataAuthHolder</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> ThreadLocal&lt;UserDataAuthInfoResp&gt; USER_DATA_AUTH_HOLDER =</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">ThreadLocal</span>&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="title function_">DataAuthHolder</span><span class="params">()</span> &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">addDataAuthInfo</span><span class="params">(UserDataAuthInfoResp userDataAuthInfoResp)</span> &#123;</span><br><span class="line">        USER_DATA_AUTH_HOLDER.set(userDataAuthInfoResp);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> UserDataAuthInfoResp <span class="title function_">getCurUserDataAuthInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> USER_DATA_AUTH_HOLDER.get();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title function_">removeCurUserDataAuthInfo</span><span class="params">()</span> &#123;</span><br><span class="line">        USER_DATA_AUTH_HOLDER.remove();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"><span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"><span class="keyword">import</span> java.util.Properties;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.executor.statement.StatementHandler;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.mapping.MappedStatement;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.mapping.SqlCommandType;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.plugin.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.reflection.MetaObject;</span><br><span class="line"><span class="keyword">import</span> org.apache.ibatis.reflection.SystemMetaObject;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.baomidou.mybatisplus.core.toolkit.PluginUtils;</span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Lists;</span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Maps;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.NonNull;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 基于mybatis的数据权限拦截器 后续可以尝试在组件初始化的时候 解析注册所有相关语句的注解 避免运行时的动态获取</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> DataPermission</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@see</span> DataPermissions</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Intercepts(&#123;@Signature(type = StatementHandler.class, method = &quot;prepare&quot;, args = &#123;Connection.class, Integer.class&#125;)&#125;)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataPermissionInterceptor</span> <span class="keyword">implements</span> <span class="title class_">Interceptor</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 语句id和其对应的数据权限注解映射的map  不存在的数据权限已经被解析过的语句则保存一个空list在里面</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    Map&lt;String, List&lt;TablePermissionInfoDTO&gt;&gt; methodDataPermissionMap = Maps.newConcurrentMap();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">intercept</span><span class="params">(Invocation invocation)</span> <span class="keyword">throws</span> Throwable &#123;</span><br><span class="line">        log.info(<span class="string">&quot;DataPermissionInterceptor begin...&quot;</span>);</span><br><span class="line">        <span class="comment">// 拿到mybatis的一些对象</span></span><br><span class="line">        <span class="type">StatementHandler</span> <span class="variable">statementHandler</span> <span class="operator">=</span> PluginUtils.realTarget(invocation.getTarget());</span><br><span class="line">        <span class="type">MetaObject</span> <span class="variable">metaObject</span> <span class="operator">=</span> SystemMetaObject.forObject(statementHandler);</span><br><span class="line">        <span class="type">MappedStatement</span> <span class="variable">mappedStatement</span> <span class="operator">=</span> (MappedStatement)metaObject.getValue(<span class="string">&quot;delegate.mappedStatement&quot;</span>);</span><br><span class="line">        <span class="comment">// 目前只代理查询类语句</span></span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(mappedStatement)</span><br><span class="line">            || !Objects.equals(mappedStatement.getSqlCommandType(), SqlCommandType.SELECT)) &#123;</span><br><span class="line">            <span class="keyword">return</span> invocation.proceed();</span><br><span class="line">        &#125;</span><br><span class="line">        List&lt;TablePermissionInfoDTO&gt; tablePermissions = methodDataPermissionMap.get(mappedStatement.getId());</span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(tablePermissions)) &#123;</span><br><span class="line">            tablePermissions = getMethodPermission(mappedStatement);</span><br><span class="line">            methodDataPermissionMap.put(mappedStatement.getId(), tablePermissions);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(tablePermissions)) &#123;</span><br><span class="line">            <span class="keyword">return</span> invocation.proceed();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 原始sql</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">originalSql</span> <span class="operator">=</span> statementHandler.getBoundSql().getSql();</span><br><span class="line">        <span class="comment">// 构建出来的带有权限的代理sql</span></span><br><span class="line">        <span class="type">DataPermissionSqlParser</span> <span class="variable">dataPermissionSqlParser</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">DataPermissionSqlParser</span>(originalSql, tablePermissions, DataAuthHolder.getCurUserDataAuthInfo());</span><br><span class="line">        metaObject.setValue(<span class="string">&quot;delegate.boundSql.sql&quot;</span>, dataPermissionSqlParser.getProxyDataPermissionSql());</span><br><span class="line">        <span class="keyword">return</span> invocation.proceed();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取指定方法的数据权限信息</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> mappedStatement</span></span><br><span class="line"><span class="comment">     *            映射语句</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> List&lt;TablePermissionInfoDTO&gt;&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;TablePermissionInfoDTO&gt; <span class="title function_">getMethodPermission</span><span class="params">(<span class="meta">@NonNull</span> MappedStatement mappedStatement)</span> &#123;</span><br><span class="line">        List&lt;TablePermissionInfoDTO&gt; list = Lists.newArrayList();</span><br><span class="line">        <span class="type">String</span> <span class="variable">className</span> <span class="operator">=</span> StringUtils.substringBeforeLast(mappedStatement.getId(), <span class="string">&quot;.&quot;</span>);</span><br><span class="line">        <span class="type">String</span> <span class="variable">methodName</span> <span class="operator">=</span> StringUtils.substringAfterLast(mappedStatement.getId(), <span class="string">&quot;.&quot;</span>);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Method[] methods = Class.forName(className).getMethods();</span><br><span class="line">            <span class="keyword">if</span>(Objects.isNull(methods))&#123;</span><br><span class="line">                <span class="keyword">return</span> list;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">for</span>(Method method :methods)&#123;</span><br><span class="line">                <span class="keyword">if</span>(Objects.nonNull(method) &amp;&amp; Objects.equals(method.getName(), methodName))&#123;</span><br><span class="line">                    DataPermission[] dataPermissionArray = <span class="literal">null</span>;</span><br><span class="line">                    <span class="type">DataPermissions</span> <span class="variable">dataPermissions</span> <span class="operator">=</span> method.getAnnotation(DataPermissions.class);</span><br><span class="line">                    <span class="keyword">if</span> (Objects.isNull(dataPermissions)) &#123;</span><br><span class="line">                        <span class="type">DataPermission</span> <span class="variable">dataPermission</span> <span class="operator">=</span> method.getAnnotation(DataPermission.class);</span><br><span class="line">                        <span class="keyword">if</span>(Objects.isNull(dataPermission))&#123;</span><br><span class="line">                            <span class="keyword">return</span> list;</span><br><span class="line">                        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                            dataPermissionArray = <span class="keyword">new</span> <span class="title class_">DataPermission</span>[]&#123;dataPermission&#125;;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                        dataPermissionArray = dataPermissions.value();</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="comment">// 收集注解中的表数据权限相关的数据</span></span><br><span class="line">                    list = TablePermissionInfoDTO.convertFrom(dataPermissionArray);</span><br><span class="line">                    <span class="keyword">return</span> list;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClassNotFoundException ex) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;getMethodPermission#ClassNotFoundException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> Object <span class="title function_">plugin</span><span class="params">(Object o)</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> Plugin.wrap(o, <span class="built_in">this</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setProperties</span><span class="params">(Properties properties)</span> &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.operators.relational.ExistsExpression;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.operators.relational.ItemsList;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections.MapUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Maps;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.NonNull;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.JSQLParserException;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.Alias;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.Expression;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.operators.conditional.AndExpression;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.operators.conditional.OrExpression;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.expression.operators.relational.InExpression;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.parser.CCJSqlParserUtil;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.schema.Table;</span><br><span class="line"><span class="keyword">import</span> net.sf.jsqlparser.statement.select.*;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 数据权限sql格式化工具 主要用于将一个sql和指定的数据权限注解以及用户本身的数据权限相结合生成对应的代理sql 暂时只支持select型sql</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">DataPermissionSqlParser</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 原始sql</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String originalSql;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * sql对应的数据权限注解信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Map&lt;String, TablePermissionInfoDTO&gt; tablePermissionInfoMap;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户数据权限信息</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> UserDataAuthInfoResp userDataAuthInfo;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">DataPermissionSqlParser</span><span class="params">(<span class="meta">@NonNull</span> String originalSql,</span></span><br><span class="line"><span class="params">        <span class="meta">@NonNull</span> List&lt;TablePermissionInfoDTO&gt; tablePermissionInfos, <span class="meta">@NonNull</span> UserDataAuthInfoResp userDataAuthInfo)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.originalSql = originalSql;</span><br><span class="line">        <span class="built_in">this</span>.userDataAuthInfo = userDataAuthInfo;</span><br><span class="line">        <span class="built_in">this</span>.tablePermissionInfoMap = Maps.newHashMapWithExpectedSize(tablePermissionInfos.size());</span><br><span class="line">        <span class="keyword">for</span> (TablePermissionInfoDTO tablePermissionInfo : tablePermissionInfos) &#123;</span><br><span class="line">            tablePermissionInfoMap.put(tablePermissionInfo.getTableName(), tablePermissionInfo);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 获取已生成权限代理的sql</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> &#123;<span class="doctag">@link</span> String&#125;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getProxyDataPermissionSql</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (MapUtils.isEmpty(<span class="built_in">this</span>.tablePermissionInfoMap) || Objects.isNull(userDataAuthInfo)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>.originalSql;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="type">Select</span> <span class="variable">select</span> <span class="operator">=</span> (Select)CCJSqlParserUtil.parse(originalSql);</span><br><span class="line">            <span class="type">PlainSelect</span> <span class="variable">plainSelect</span> <span class="operator">=</span> (PlainSelect)select.getSelectBody();</span><br><span class="line">            parseSelect(plainSelect);</span><br><span class="line">            <span class="keyword">return</span> plainSelect.toString();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (JSQLParserException ex) &#123;</span><br><span class="line">            log.error(<span class="string">&quot;getProxyDataPermissionSql#JSQLParserException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">            <span class="keyword">return</span> originalSql;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析选择语句并进行替换</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> plainSelect</span></span><br><span class="line"><span class="comment">     *            选择语句</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parseSelect</span><span class="params">(<span class="meta">@NonNull</span> PlainSelect plainSelect)</span> <span class="keyword">throws</span> JSQLParserException &#123;</span><br><span class="line">        <span class="comment">// 尝试解析语句主体</span></span><br><span class="line">        parseSelectBody(plainSelect);</span><br><span class="line">        <span class="comment">// 解析select主体中from里面的子查询</span></span><br><span class="line">        parseSelectFromSubSelect(plainSelect);</span><br><span class="line">        <span class="comment">// 解析select主体中where里面的子查询</span></span><br><span class="line">        parseSelectWhereSubSelect(plainSelect);</span><br><span class="line">        <span class="comment">// 解析select主体中join里面的子查询和普通连表被识别为join的表</span></span><br><span class="line">        parseSelectJoin(plainSelect);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析select主体</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> plainSelect</span></span><br><span class="line"><span class="comment">     *            简单的选择</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> JSQLParserException</span></span><br><span class="line"><span class="comment">     *             jsqlparser例外</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parseSelectBody</span><span class="params">(<span class="meta">@NonNull</span> PlainSelect plainSelect)</span> <span class="keyword">throws</span> JSQLParserException &#123;</span><br><span class="line">        <span class="type">FromItem</span> <span class="variable">fromItem</span> <span class="operator">=</span> plainSelect.getFromItem();</span><br><span class="line">        <span class="comment">// 解析不到查询语句中的from语句块 无法知道知道从哪个表查询 故不进行解析和代理</span></span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(fromItem)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">TablePermissionInfoDTO</span> <span class="variable">tablePermissionInfoDTO</span> <span class="operator">=</span> findFromItemTablePermissionInfo(fromItem);</span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(tablePermissionInfoDTO)) &#123;</span><br><span class="line">            <span class="comment">// 指定的表没有权限代理需求</span></span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 开始代理指定查询</span></span><br><span class="line">            <span class="comment">//主体表的别名</span></span><br><span class="line">            <span class="type">String</span> <span class="variable">alias</span> <span class="operator">=</span> getAlias(fromItem);</span><br><span class="line">            doParseSelect(plainSelect, alias, tablePermissionInfoDTO);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析select主体中from里面的子查询</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> plainSelect</span></span><br><span class="line"><span class="comment">     *            简单的选择</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@throws</span> JSQLParserException</span></span><br><span class="line"><span class="comment">     *             jsqlparser例外</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parseSelectFromSubSelect</span><span class="params">(<span class="meta">@NonNull</span> PlainSelect plainSelect)</span> <span class="keyword">throws</span> JSQLParserException &#123;</span><br><span class="line">        <span class="type">FromItem</span> <span class="variable">fromItem</span> <span class="operator">=</span> plainSelect.getFromItem();</span><br><span class="line">        <span class="keyword">if</span> (Objects.nonNull(fromItem) &amp;&amp; fromItem <span class="keyword">instanceof</span> SubSelect) &#123;</span><br><span class="line">            <span class="type">PlainSelect</span> <span class="variable">subSelect</span> <span class="operator">=</span> (PlainSelect)((SubSelect)fromItem).getSelectBody();</span><br><span class="line">            parseSelect(subSelect);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析select主体中where里面的子查询</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> plainSelect</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parseSelectWhereSubSelect</span><span class="params">(<span class="meta">@NonNull</span> PlainSelect plainSelect)</span> <span class="keyword">throws</span> JSQLParserException&#123;</span><br><span class="line">        <span class="type">Expression</span> <span class="variable">expression</span> <span class="operator">=</span> plainSelect.getWhere();</span><br><span class="line">        <span class="keyword">if</span>(Objects.nonNull(expression))&#123;</span><br><span class="line">            parseSelectExpression(expression);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parseSelectExpression</span><span class="params">(<span class="meta">@NonNull</span>  Expression expression)</span> <span class="keyword">throws</span> JSQLParserException&#123;</span><br><span class="line">        <span class="keyword">if</span>(Objects.nonNull(expression))&#123;</span><br><span class="line">            <span class="keyword">if</span>(expression <span class="keyword">instanceof</span>  AndExpression)&#123;</span><br><span class="line">                <span class="type">AndExpression</span> <span class="variable">andExpression</span> <span class="operator">=</span> (AndExpression) expression;</span><br><span class="line">                parseSelectExpression(andExpression.getLeftExpression());</span><br><span class="line">                parseSelectExpression(andExpression.getRightExpression());</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(expression <span class="keyword">instanceof</span> OrExpression)&#123;</span><br><span class="line">                <span class="type">OrExpression</span> <span class="variable">orExpression</span> <span class="operator">=</span> (OrExpression) expression;</span><br><span class="line">                parseSelectExpression(orExpression.getLeftExpression());</span><br><span class="line">                parseSelectExpression(orExpression.getRightExpression());</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(expression <span class="keyword">instanceof</span> InExpression)&#123;</span><br><span class="line">                <span class="type">InExpression</span> <span class="variable">inExpression</span> <span class="operator">=</span> (InExpression) expression;</span><br><span class="line">                <span class="type">ItemsList</span> <span class="variable">itemsList</span> <span class="operator">=</span> inExpression.getRightItemsList();</span><br><span class="line">                <span class="comment">//in的子查询一般在右边</span></span><br><span class="line">                <span class="keyword">if</span>(Objects.nonNull(itemsList) &amp;&amp; itemsList <span class="keyword">instanceof</span> SubSelect) &#123;</span><br><span class="line">                    parseSelect((PlainSelect) ((SubSelect) itemsList).getSelectBody());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span> <span class="keyword">if</span>(expression <span class="keyword">instanceof</span> ExistsExpression)&#123;</span><br><span class="line">                <span class="type">ExistsExpression</span> <span class="variable">existsExpression</span> <span class="operator">=</span> (ExistsExpression) expression;</span><br><span class="line">                <span class="type">Expression</span> <span class="variable">rightExpression</span> <span class="operator">=</span> existsExpression.getRightExpression();</span><br><span class="line">                <span class="comment">//exists的子查询一般在右边</span></span><br><span class="line">                <span class="keyword">if</span>(Objects.nonNull(rightExpression) &amp;&amp; rightExpression <span class="keyword">instanceof</span> SubSelect)&#123;</span><br><span class="line">                    parseSelect((PlainSelect)((SubSelect)rightExpression).getSelectBody());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析select主体中join里面的子查询</span></span><br><span class="line"><span class="comment">     * </span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> plainSelect</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">parseSelectJoin</span><span class="params">(<span class="meta">@NonNull</span> PlainSelect plainSelect)</span> <span class="keyword">throws</span> JSQLParserException &#123;</span><br><span class="line">        List&lt;Join&gt; joins = plainSelect.getJoins();</span><br><span class="line">        <span class="keyword">if</span> (CollectionUtils.isEmpty(joins)) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (Join join : joins) &#123;</span><br><span class="line">            <span class="type">FromItem</span> <span class="variable">fromItem</span> <span class="operator">=</span> join.getRightItem();</span><br><span class="line">            <span class="keyword">if</span>(Objects.nonNull(fromItem))&#123;</span><br><span class="line">                <span class="comment">//有可能join的只是一张表</span></span><br><span class="line">                <span class="type">TablePermissionInfoDTO</span> <span class="variable">tablePermissionInfoDTO</span> <span class="operator">=</span> findFromItemTablePermissionInfo(fromItem);</span><br><span class="line">                <span class="keyword">if</span> (Objects.isNull(tablePermissionInfoDTO)) &#123;</span><br><span class="line">                    <span class="comment">// 指定的表没有权限代理需求</span></span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 开始代理指定查询</span></span><br><span class="line">                    <span class="comment">//被连接表的别名</span></span><br><span class="line">                    <span class="type">String</span> <span class="variable">alias</span> <span class="operator">=</span> getAlias(fromItem);</span><br><span class="line">                    doParseSelect(plainSelect, alias, tablePermissionInfoDTO);</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">if</span>(fromItem <span class="keyword">instanceof</span> SubSelect)&#123;</span><br><span class="line">                    <span class="comment">//有可能join的是一个子查询</span></span><br><span class="line">                    parseSelect((PlainSelect)((SubSelect)fromItem).getSelectBody());</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * from的表名需要进行代理</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> fromItem</span></span><br><span class="line"><span class="comment">     *            from的表名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> boolean</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> TablePermissionInfoDTO <span class="title function_">findFromItemTablePermissionInfo</span><span class="params">(<span class="meta">@NonNull</span> FromItem fromItem)</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (fromItem <span class="keyword">instanceof</span> Table) &#123;</span><br><span class="line">            <span class="comment">// from 具体的表</span></span><br><span class="line">            <span class="type">Table</span> <span class="variable">table</span> <span class="operator">=</span> ((Table)fromItem);</span><br><span class="line">            <span class="type">String</span> <span class="variable">tableName</span> <span class="operator">=</span> table.getName();</span><br><span class="line">            <span class="type">Alias</span> <span class="variable">tableAlias</span> <span class="operator">=</span> table.getAlias();</span><br><span class="line">            <span class="keyword">if</span> (Objects.nonNull(tablePermissionInfoMap.get(tableName))) &#123;</span><br><span class="line">                <span class="comment">// 这个表需要进行权限代理</span></span><br><span class="line">                <span class="keyword">return</span> tablePermissionInfoMap.get(tableName);</span><br><span class="line">            &#125; <span class="keyword">else</span> <span class="keyword">if</span> (Objects.nonNull(tableAlias)</span><br><span class="line">                &amp;&amp; Objects.nonNull(tablePermissionInfoMap.get(tableAlias.getName()))) &#123;</span><br><span class="line">                <span class="comment">// 这个表的别名需要进行权限代理</span></span><br><span class="line">                <span class="keyword">return</span> tablePermissionInfoMap.get(tableAlias.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (fromItem <span class="keyword">instanceof</span> SubSelect) &#123;</span><br><span class="line">            <span class="comment">// from 子查询</span></span><br><span class="line">            <span class="type">SubSelect</span> <span class="variable">subSelect</span> <span class="operator">=</span> ((SubSelect)fromItem);</span><br><span class="line">            <span class="type">Alias</span> <span class="variable">tableAlias</span> <span class="operator">=</span> subSelect.getAlias();</span><br><span class="line">            <span class="keyword">if</span> (Objects.nonNull(tableAlias) &amp;&amp; Objects.nonNull(tablePermissionInfoMap.get(tableAlias.getName()))) &#123;</span><br><span class="line">                <span class="comment">// 这个表的别名需要进行权限代理</span></span><br><span class="line">                <span class="keyword">return</span> tablePermissionInfoMap.get(tableAlias.getName());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 解析sql并添加数据权限</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> plainSelect</span></span><br><span class="line"><span class="comment">     *            查询语句（不为空）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> tablePermissionInfoDTO</span></span><br><span class="line"><span class="comment">     *            表数据权限信息（不为空）</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">doParseSelect</span><span class="params">(<span class="meta">@NonNull</span> PlainSelect plainSelect, String alias, <span class="meta">@NonNull</span> TablePermissionInfoDTO tablePermissionInfoDTO)</span></span><br><span class="line">        <span class="keyword">throws</span> JSQLParserException &#123;</span><br><span class="line">        <span class="comment">// 取得原SQL的where条件</span></span><br><span class="line">        <span class="type">Expression</span> <span class="variable">expression</span> <span class="operator">=</span> plainSelect.getWhere();</span><br><span class="line">        <span class="type">String</span> <span class="variable">dataAuthCondition</span> <span class="operator">=</span> tablePermissionInfoDTO.buildDataAuthCondition(alias, <span class="built_in">this</span>.userDataAuthInfo);</span><br><span class="line">        <span class="type">Expression</span> <span class="variable">dataAuthExpression</span> <span class="operator">=</span> CCJSqlParserUtil.parseCondExpression(dataAuthCondition);</span><br><span class="line">        <span class="keyword">if</span> (Objects.isNull(expression)) &#123;</span><br><span class="line">            <span class="comment">// 查询没有带条件</span></span><br><span class="line">            plainSelect.setWhere(dataAuthExpression);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 查询有带条件</span></span><br><span class="line">            <span class="type">AndExpression</span> <span class="variable">andExpression</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">AndExpression</span>(expression, dataAuthExpression);</span><br><span class="line">            plainSelect.setWhere(andExpression);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String <span class="title function_">getAlias</span><span class="params">(FromItem fromItem)</span>&#123;</span><br><span class="line">        <span class="comment">//主体表名的别名 在有别名的情况下使用主表名 会提示解析异常</span></span><br><span class="line">        <span class="type">String</span> <span class="variable">alias</span> <span class="operator">=</span> StringUtils.EMPTY;</span><br><span class="line">        <span class="keyword">if</span>(Objects.nonNull(fromItem) &amp;&amp; Objects.nonNull(fromItem.getAlias()))&#123;</span><br><span class="line">            alias = fromItem.getAlias().toString();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> alias;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>使用方式就是在<code>mybatis</code>的<code>mapper</code>接口里面对需要进行数据权限代理的方法添加<code>DataPermission</code>注解，如需要同时对多个表加数据查询权限则添加多个<code>DataPermission</code>注解即可。</p>
+<p>​	注意：<code>DataPermissionInterceptor</code>需要添加到<code>mybatis</code>的<code>sqlSessionFactory</code>里面才能生效</p>
+<p>示例代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">private SqlSessionFactory buildSqlSessionFactory(DataSource dataSource) throws Exception &#123;</span><br><span class="line">    MybatisSqlSessionFactoryBean factory = new MybatisSqlSessionFactoryBean();</span><br><span class="line">    factory.setDataSource(dataSource);</span><br><span class="line">    MybatisConfiguration configuration = new MybatisConfiguration();</span><br><span class="line">    configuration.setMapUnderscoreToCamelCase(true);</span><br><span class="line">    configuration.addInterceptor(new DataPermissionInterceptor());</span><br><span class="line">    //分页拦截器</span><br><span class="line">    configuration.addInterceptor(new PaginationInterceptor());</span><br><span class="line">    factory.setConfiguration(configuration);</span><br><span class="line">    return factory.getObject();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2022/01/03/%E4%B8%80%E6%96%87%E8%AE%B2%E8%A7%A3javax.validation/" rel="next" title="一文讲解javax.validation">
+                <i class="fa fa-chevron-left"></i> 一文讲解javax.validation
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2022/01/03/%E5%A6%82%E4%BD%95%E9%98%85%E8%AF%BB%E6%BA%90%E7%A0%81/" rel="prev" title="如何阅读源码">
+                如何阅读源码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ozipin" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:908002873@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EMybatis%E7%9A%84%E6%95%B0%E6%8D%AE%E6%9D%83%E9%99%90%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="nav-number">1.</span> <span class="nav-text">基于Mybatis的数据权限的实现</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ozipin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

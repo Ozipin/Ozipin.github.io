@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="file," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="将excel导入全过程实现的层次分明，简单明了，体验友好">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优雅的实践你的excel导入">
+<meta property="og:url" content="https://www.ozipin.com/2021/04/02/%E4%BC%98%E9%9B%85%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%BD%A0%E7%9A%84excel%E5%AF%BC%E5%85%A5/index.html">
+<meta property="og:site_name" content="ozipin&#39;s blog">
+<meta property="og:description" content="将excel导入全过程实现的层次分明，简单明了，体验友好">
+<meta property="og:locale">
+<meta property="og:image" content="https://www.ozipin.com/1617360168082.png">
+<meta property="og:image" content="https://www.ozipin.com/1617360257365.png">
+<meta property="og:image" content="https://www.ozipin.com/1617360352055.png">
+<meta property="article:published_time" content="2021-04-02T12:46:49.000Z">
+<meta property="article:modified_time" content="2023-02-18T12:05:27.844Z">
+<meta property="article:author" content="Ozipin">
+<meta property="article:tag" content="file">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.ozipin.com/1617360168082.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://www.ozipin.com/2021/04/02/优雅的实践你的excel导入/"/>
+
+
+
+
+
+  <title>优雅的实践你的excel导入 | ozipin's blog</title>
+  
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <a target="_blank" rel="noopener" href="https://github.com/Ozipin" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ozipin's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">热爱技术，享受生活</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="https://www.ozipin.com/2021/04/02/%E4%BC%98%E9%9B%85%E7%9A%84%E5%AE%9E%E8%B7%B5%E4%BD%A0%E7%9A%84excel%E5%AF%BC%E5%85%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="ozipin's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">优雅的实践你的excel导入</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-04-02T20:46:49+08:00">
+                2021-04-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+              <div class="post-description">
+                  将excel导入全过程实现的层次分明，简单明了，体验友好
+              </div>
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="导言"><a href="#导言" class="headerlink" title="导言"></a>导言</h2><p>​	excel文档的批量导入在我们的实际开发过程中经常会遇到。由于批导的功能一般较为复杂，除了繁复的导入数据处理外，还有各种数据格式的验证，业务数据的验证，乃至于错误信息的收集等等无一不在加深代码的复杂度。所以批导的功能很多人会写，但却只有很少的人能将自己的批量导入的功能写的层次分明，实现优雅。本文将介绍自己目前对于excel文件导入功能的处理的全过程。</p>
+<p>注：本文展示的代码或有不全，代码详情可见<code>github</code>:  <code>https://github.com/Ozipin/file-master</code></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">项目基于:	springboot</span><br><span class="line">excel处理工具:	easy excel</span><br><span class="line">文件存储:	其他oss上传工具或数据库持久层框架</span><br></pre></td></tr></table></figure>
+
+<h2 id="模板下载"><a href="#模板下载" class="headerlink" title="模板下载"></a>模板下载</h2><p>​	excel的导入必须要让使用者知道批量导入的时候可以填写哪些内容，需要填写哪些内容，具体的内容怎么填。一个说明准确，提示清晰的模板会减少大量的用户使用疑问。下文会介绍两种模板的下载实现方式和各自实现方式的优缺点</p>
+<h3 id="直接生成"><a href="#直接生成" class="headerlink" title="直接生成"></a>直接生成</h3><p>​	直接生成即利用<code>easy excel</code>的功能直接在用户请求下载导入模板的时候，实时进行模板<code>excel</code>内容的生成，并将excel的内容写至输出流从而实现模板下载的功能，大致功能代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 下载时实时生成</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@ApiOperation(value = &quot;模板下载-实时生成的&quot;)</span></span><br><span class="line">   <span class="meta">@PostMapping(value = &quot;/download/from-generated&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">downloadFromGenerated</span><span class="params">(HttpServletResponse response)</span> <span class="keyword">throws</span> IOException&#123;</span><br><span class="line">       <span class="type">String</span> <span class="variable">sheetMame</span> <span class="operator">=</span> ConstantStr.STUDENT_INFO_IMPORT_TEMPLATE;</span><br><span class="line">       <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> String.format(<span class="string">&quot;%s%s&quot;</span>, sheetMame, ConstantStr.EXCEL_SUFFIX);</span><br><span class="line">       DownloadHelper.prepareDownload(response, fileName);</span><br><span class="line">       EasyExcelFactory.write(response.getOutputStream(), StudentInfoModal.class)</span><br><span class="line">               .sheet(sheetMame)</span><br><span class="line">               .doWrite(Lists.newArrayList(StudentInfoModal.getExampleData()));</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="静态资源下载"><a href="#静态资源下载" class="headerlink" title="静态资源下载"></a>静态资源下载</h3><p>​	静态资源下载导入模板的方式不同于下载时直接生成，而是由开发者自己提前准备一个excel导入模板，放入项目文件夹中，每次下载都是直接下载这个静态资源。大致功能代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 从静态资源下载</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@ApiOperation(value = &quot;模板下载-从静态资源&quot;)</span></span><br><span class="line">   <span class="meta">@PostMapping(value = &quot;/download/from-resources&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">downloadFromResources</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">       <span class="comment">//静态资源路径</span></span><br><span class="line">       <span class="type">ClassPathResource</span> <span class="variable">classPathResource</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ClassPathResource</span>(<span class="string">&quot;templates/import/学生信息导入模板.xlsx&quot;</span>);</span><br><span class="line">       <span class="type">String</span> <span class="variable">fileName</span> <span class="operator">=</span> classPathResource.getFilename();</span><br><span class="line">       <span class="comment">// 设置编码格式</span></span><br><span class="line">       fileName = java.net.URLEncoder.encode(fileName, <span class="string">&quot;UTF-8&quot;</span>);</span><br><span class="line">       <span class="comment">// 告诉浏览器输出内容为流</span></span><br><span class="line">       response.setHeader(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/octet-stream;charset=utf-8&quot;</span>);</span><br><span class="line">       response.addHeader(<span class="string">&quot;Content-Disposition&quot;</span>, String.format(<span class="string">&quot;attachment;filename=%s&quot;</span>, fileName));</span><br><span class="line">       <span class="type">OutputStream</span> <span class="variable">outputStream</span> <span class="operator">=</span> response.getOutputStream();</span><br><span class="line">       IOUtils.copy(classPathResource.getInputStream(), outputStream);</span><br><span class="line">       outputStream.flush();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>​	两种实现方式都能实现导入模板的下载，但是由于实现方式的不同，两种方式之间也会存在着各自的长处和缺点。</p>
+<p>​	直接生成方式：由于模板文件是在每次下载的时候通过代码生成的，所以对于开发者而言，模板的生成只需要编写简单的<code>easy excel</code>的导出<code>modal</code>类即可。对于提醒用户的必填，非必填之类的也可以通过<code>easy excel</code>的注解如表头名<code>ExcelProperty</code>在原有表头名字段后面备注必填或非必填来提醒用户知道哪些字段需要填写；或者通过表头背景颜色即铜鼓注解<code>HeadStyle</code>的<code>fillForegroundColor</code>属性来进行提示，比如定义红色为必填，黄色为选填，则可以设置<code>fillForegroundColor</code>的值为10（红色），或者13（黄色）来达到提供用户的目的。此外此<code>modal</code>类一般也会用于导入的功能，所以也会降低一些导入功能改动而引起问题的概率。这样看来，用直接生成的方式似乎很美好，为什么还要有通过静态资源直接下载的方式？相比于静态资源的直接下载，直接生成的下载方式薄弱的地方在于<code>excel</code>的生成，即我们无法通过代码生成太过复杂的<code>excel</code>文档或者用来生成太过复杂的文档对于当前的<code>excel</code>生成方案来说太过复杂。举个例子：我们要让用户导入学生的数据，学生的性别可能是男或者女，一般而言让用户手动输入是完全没问题的，但是为了更好的用户体验，我们需要把这个输入改成一个下拉框，下拉框的值是男&#x2F;女，当我们使用直接生成的方式的时候可能就意味着我们需要针对这个下拉框来做额外的编码工作，甚至于当所选方案生成下拉框实现较为困难时会花费我们更多的时间。</p>
+<p>​	静态资源下载：由于这种方式的下载实质就是下载一个我们提前准备好的模板文件，所以我们在编码工作之外还需要去动用<code>excel</code>来新建一个模板文档，这自然不如使用直接生成的方式来的简单。此外，由于<code>excel</code>文档是静态资源而非实时生成的，这样它和导入<code>modal</code>类之间的关联性就没有直接生成方式的那么强，这样在有些需求变动的时候，两边出现不一致的情况的几率可能就相对较大。但是使用<code>excel</code>软件来生成模板文件的话，确实也是给了我们更大的便利，简单如限制<code>excel</code>输入框的格式，复杂的如一个用代码实现起来比较困难的下拉框你可以在这边简单的实现，甚至于级联下拉框，更甚者可以在<code>excel</code>模板里面加入<code>vba</code>脚本。</p>
+<p>​	两种方式都可实现一个导入模板的下载，我们在实际开发中可以根据实际情况选择实现起来比较简单的方式。此外，在遇到两种方式实现起来都较为困难的情况时，我们甚至于可以将两种方式进行结合，比如我这边曾经遇到需要将一个下拉框的数据是根据数据库实时获取的，所以我先用静态资源维护了一个<code>excel</code>模板，下拉框填充的内容指向<code>excel</code>的另一个<code>sheet</code>的指定列，然后在模板下载的时候，实时写入最新的数据到另一个<code>sheet</code>的指定列。</p>
+<h2 id="数据导入"><a href="#数据导入" class="headerlink" title="数据导入"></a>数据导入</h2><p>​	数据导入处理是我们做文件导入功能的核心，通常我们做这一块的时候需要面对很多要处理的内容：excel内容解析，业务强关联数据的业务验证，业务弱关联数据的格式验证，验证失败原因的收集等等。而我们要做的就是挑选合适方案，简化这些工作，为复杂的工作做减法。</p>
+<p>​	内容解析方面我们使用<code>easy excel</code>只需新建一个<code>modal</code>类，通过注解配置类中每个字段对应的表头名，即可轻松完成导入<code>modal</code>类和<code>excel</code>内容的对应和解析，如我们新建了一个学生信息导入的<code>modal</code>类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.excel.modal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.ExcelProperty;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.ColumnWidth;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.ContentRowHeight;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.HeadFontStyle;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.HeadStyle;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.experimental.Accessors;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.NotBlank;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Pattern;</span><br><span class="line"><span class="keyword">import</span> javax.validation.constraints.Size;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生信息模板</span></span><br><span class="line"><span class="comment"> * 身高与体重可以在后续地方进行验证  或者自定义一个验证注解进行注解</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/03/31</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@Accessors(chain = true)</span></span><br><span class="line"><span class="meta">@ColumnWidth(15)</span></span><br><span class="line"><span class="meta">@HeadFontStyle(fontHeightInPoints = 10)</span></span><br><span class="line"><span class="meta">@ContentRowHeight(20)</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentInfoModal</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HeadStyle(fillForegroundColor = 10)</span></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;学号(必填)&quot;)</span></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;请填写学号&quot;)</span></span><br><span class="line">    <span class="meta">@Size(min = 10, max = 10, message = &quot;学号只能为10位&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String no;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HeadStyle(fillForegroundColor = 10)</span></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;姓名(必填)&quot;)</span></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;请填写姓名&quot;)</span></span><br><span class="line">    <span class="meta">@Size(min = 2, max = 5, message = &quot;姓名长度只能在2-5位&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String name;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HeadStyle(fillForegroundColor = 10)</span></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;性别(必填)(男|女)&quot;)</span></span><br><span class="line">    <span class="meta">@NotBlank(message = &quot;请填写性别&quot;)</span></span><br><span class="line">    <span class="meta">@Pattern(regexp = &quot;(男|女)&quot;, message = &quot;请填写正确的性别字段&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String sex;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HeadStyle(fillForegroundColor = 13)</span></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;身高(M)&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String height;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@HeadStyle(fillForegroundColor = 13)</span></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;体重(KG)&quot;)</span></span><br><span class="line">    <span class="keyword">private</span> String weight;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> StudentInfoModal <span class="title function_">getExampleData</span><span class="params">()</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">StudentInfoModal</span>().setNo(<span class="string">&quot;(示例数据)2021111101&quot;</span>)</span><br><span class="line">                .setName(<span class="string">&quot;(示例数据)张三&quot;</span>)</span><br><span class="line">                .setSex(<span class="string">&quot;(示例数据)男&quot;</span>)</span><br><span class="line">                .setHeight(<span class="string">&quot;(示例数据)1.80&quot;</span>)</span><br><span class="line">                .setWeight(<span class="string">&quot;(示例数据)70&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们在<code>excel</code>里面表头为’学号(必填)’的列会被自动映射到每个实体的‘no’字段里。在实际使用的时候，我们只需要使用<code>easy excel</code>将<code>excel</code>对应的<code>MultipartFile</code>和需要映射的<code>modal</code>类关联，具体实现大致如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 文件导入</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="meta">@ApiOperation(value = &quot;文件导入&quot;)</span></span><br><span class="line">  <span class="meta">@PostMapping(value = &quot;/import&quot;)</span></span><br><span class="line">  <span class="keyword">public</span> CommonResultVo&lt;ExcelImportResultVo&gt; <span class="title function_">importExcel</span><span class="params">(<span class="meta">@ApiParam(value = &quot;file&quot;, required = true)</span> MultipartFile file)</span> &#123;</span><br><span class="line">      <span class="type">StudentInfoListener</span> <span class="variable">studentInfoListener</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoListener</span>();</span><br><span class="line">      <span class="keyword">try</span> &#123;</span><br><span class="line">          EasyExcel.read(file.getInputStream(), StudentInfoModal.class, studentInfoListener).sheet().doRead();</span><br><span class="line">      &#125;<span class="keyword">catch</span> (IOException ex)&#123;</span><br><span class="line">          log.error(<span class="string">&quot;importExcel#IOException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CommonException</span>(ex.getMessage());</span><br><span class="line">      &#125;<span class="keyword">catch</span> (ExcelAnalysisException ex)&#123;</span><br><span class="line">          log.error(<span class="string">&quot;importExcel#BaseException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">          <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CommonException</span>(ex.getMessage());</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">CommonResultVoBuilder</span>&lt;ExcelImportResultVo&gt;().success(studentInfoListener.getExcelImportResultVo()).build();</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>核心的listener类内容如下:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentInfoListener</span> <span class="keyword">extends</span> <span class="title class_">AnalysisEventListener</span>&lt;StudentInfoModal&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">ExcelImportResultVo</span> <span class="variable">excelImportResultVo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExcelImportResultVo</span>();</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(StudentInfoModal studentInfoModal, AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;invoke#解析到一条数据: &#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doAfterAllAnalysed</span><span class="params">(AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;doAfterAllAnalysed#excel数据解析完毕...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invokeHeadMap</span><span class="params">(Map&lt;Integer, String&gt; headMap, AnalysisContext context)</span> &#123;</span><br><span class="line">        <span class="comment">//表头校验</span></span><br><span class="line">        log.info(<span class="string">&quot;解析到一条表头：&#123;&#125;&quot;</span>, JSONObject.toJSONString(headMap));</span><br><span class="line">        Map&lt;Integer, String&gt; reallyMap = ReflectUtils.getExcelHeadMap(StudentInfoModal.class);</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">headErrorStr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; headMap.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!headMap.get(i).equals(reallyMap.get(i))) &#123;</span><br><span class="line">                headErrorStr.append(String.format(<span class="string">&quot;表头第%s列[%s]应该为[%s]&quot;</span>, i + <span class="number">1</span>, headMap.get(i), reallyMap.get(i)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(headErrorStr.toString())) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ExcelAnalysisException</span>(headErrorStr.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时我们测试上传一个<code>excel</code>，观察打印信息，即可看到<code>excel</code>表格的内容被正确解析展示。</p>
+<p>​	至此，我们的<code>excel</code>解析工作就已经完成了，接下来我们就要对要使用的数据做基本的格式验证了，比如说字段长度，限定值的话填写内容是否在限定范围内，手机号的话是否是一个合格的手机号等等。根据业务，需要验证的场景可能不尽相同，而很多时候针对于一个字段甚至有多个情况需要验证，一串完善的基础数据合法性的验证可能会是一段冗长的代码，这样的情况下遗漏和失误的几率就会上升，所以我们需要将这些验证变得简单并且最好能收集到验证不通过的原因，以便于用户能够快速定位问题。这里的话我使用的是<code>validation-api</code>,如上述代码中我们展示的<code>StudentInfoModal</code>类，对于需要验证的字段通过注释配置了验证规则和验证失败的提示。代码大致如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(StudentInfoModal studentInfoModal, AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">    log.info(<span class="string">&quot;invoke#解析到一条数据: &#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">    <span class="comment">//错误信息合集</span></span><br><span class="line">    List&lt;String&gt; errorMsgs = Lists.newArrayList();</span><br><span class="line">    <span class="comment">//数据基本格式验证</span></span><br><span class="line">    baseInfoCheck(studentInfoModal, errorMsgs);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 基本信息检查</span></span><br><span class="line"><span class="comment">    *</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> studentInfoModal 学生信息模态</span></span><br><span class="line"><span class="comment">    * <span class="doctag">@param</span> errorMsgs        错误信息集合</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">baseInfoCheck</span><span class="params">(<span class="meta">@NonNull</span> StudentInfoModal studentInfoModal, <span class="meta">@NonNull</span> List&lt;String&gt; errorMsgs)</span>&#123;</span><br><span class="line">       log.info(<span class="string">&quot;baseInfoCheck# studentInfoModal:&#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">       <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(studentInfoModal, studentInfoModal.getClass().getName());</span><br><span class="line">       validator.validate(studentInfoModal, errors);</span><br><span class="line">       List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">       <span class="keyword">if</span>(CollectionUtils.isNotEmpty(allErrors))&#123;</span><br><span class="line">           allErrors.forEach(error -&gt; errorMsgs.add(error.getDefaultMessage()));</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="comment">//非注解可完成的可以加在此处</span></span><br><span class="line">       <span class="keyword">if</span>(StringUtils.isNotBlank(studentInfoModal.getHeight()))&#123;</span><br><span class="line">           <span class="keyword">if</span>(NumberUtils.isCreatable(studentInfoModal.getHeight()))&#123;</span><br><span class="line">               <span class="type">Double</span> <span class="variable">height</span> <span class="operator">=</span> Double.valueOf(studentInfoModal.getHeight());</span><br><span class="line">               <span class="keyword">if</span>(height &gt; <span class="number">5.00D</span>)&#123;</span><br><span class="line">                   errorMsgs.add(<span class="string">&quot;身高值异常&quot;</span>);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">               errorMsgs.add(<span class="string">&quot;身高只能是数字&quot;</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">if</span>(StringUtils.isNotBlank(studentInfoModal.getWeight()))&#123;</span><br><span class="line">           <span class="keyword">if</span>(NumberUtils.isCreatable(studentInfoModal.getWeight()))&#123;</span><br><span class="line">               <span class="type">Double</span> <span class="variable">weight</span> <span class="operator">=</span> Double.valueOf(studentInfoModal.getWeight());</span><br><span class="line">               <span class="keyword">if</span>(weight &gt; <span class="number">1000.00D</span>)&#123;</span><br><span class="line">                   errorMsgs.add(<span class="string">&quot;体重值异常&quot;</span>);</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">               errorMsgs.add(<span class="string">&quot;体重只能是数字&quot;</span>);</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>我们利用<code>validation-api</code>对数据进行了基础的验证，对于一些没有合适的注解的或者有些业务相关限制的验证，我们可以通过自定义相关验证注解的方式或者直接简单的手写代码来进行验证并收集相关验证结果。</p>
+<p>​	完成了基本的数据格式验证之后一般而言这些通过验证的数据已经是可靠的数据了，但是很多时候，正确输入的数据并不一定是业务逻辑上的合法数据，所以很多时候我们还会有业务逻辑上的验证。以学生信息为例，正常来说一个系统里的一个学号的学生应该是只有一个的，如果只信任导入的数据不做业务逻辑的验证，那么最后导入的结果就会有问题。所以除了基础的数据格式验证之外，我们还需要有一些业务逻辑的验证，并收集相关的错误信息。此处暂时没有比较好的选择，所以目前都是手写的代码。举例代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">   <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 文件导入</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@ApiOperation(value = &quot;文件导入&quot;)</span></span><br><span class="line">   <span class="meta">@PostMapping(value = &quot;/import&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> CommonResultVo&lt;ExcelImportResultVo&gt; <span class="title function_">importExcel</span><span class="params">(<span class="meta">@ApiParam(value = &quot;file&quot;, required = true)</span> MultipartFile file)</span> &#123;</span><br><span class="line">       <span class="type">StudentInfoListener</span> <span class="variable">studentInfoListener</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoListener</span>(userService);</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           EasyExcel.read(file.getInputStream(), StudentInfoModal.class, studentInfoListener).sheet().doRead();</span><br><span class="line">       &#125;<span class="keyword">catch</span> (IOException ex)&#123;</span><br><span class="line">           log.error(<span class="string">&quot;importExcel#IOException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CommonException</span>(ex.getMessage());</span><br><span class="line">       &#125;<span class="keyword">catch</span> (ExcelAnalysisException ex)&#123;</span><br><span class="line">           log.error(<span class="string">&quot;importExcel#BaseException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CommonException</span>(ex.getMessage());</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">CommonResultVoBuilder</span>&lt;ExcelImportResultVo&gt;().success(studentInfoListener.getExcelImportResultVo()).build();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.excel.listener;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.context.AnalysisContext;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.event.AnalysisEventListener;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.exception.ExcelAnalysisException;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Lists;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.domain.vo.ExcelImportResultVo;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.excel.modal.StudentInfoResultModal;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.excel.modal.StudentInfoModal;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.service.UserService;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.utils.ReflectUtils;</span><br><span class="line"><span class="keyword">import</span> lombok.Getter;</span><br><span class="line"><span class="keyword">import</span> lombok.NonNull;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.math.NumberUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> javax.validation.Validator;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentInfoListener</span> <span class="keyword">extends</span> <span class="title class_">AnalysisEventListener</span>&lt;StudentInfoModal&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">ExcelImportResultVo</span> <span class="variable">excelImportResultVo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExcelImportResultVo</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line">    <span class="comment">//验证通过的数据  最后用于保存</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;StudentInfoModal&gt; validModals = Lists.newArrayList();</span><br><span class="line">    <span class="comment">//验证结果</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;StudentInfoResultModal&gt; resultModals = Lists.newArrayList();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">StudentInfoListener</span><span class="params">(UserService userService)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.userService = userService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(StudentInfoModal studentInfoModal, AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;invoke#解析到一条数据: &#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">        <span class="comment">//错误信息合集</span></span><br><span class="line">        List&lt;String&gt; errorMsgs = Lists.newArrayList();</span><br><span class="line">        <span class="comment">//数据基本格式验证</span></span><br><span class="line">        baseInfoCheck(studentInfoModal, errorMsgs);</span><br><span class="line">        <span class="comment">//业务逻辑验证</span></span><br><span class="line">        logicVerification(studentInfoModal, errorMsgs);</span><br><span class="line">        <span class="keyword">if</span>(CollectionUtils.isEmpty(errorMsgs))&#123;</span><br><span class="line">            validModals.add(studentInfoModal);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">StudentInfoResultModal</span> <span class="variable">resultModal</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoResultModal</span>.StudentInfoErrorModalBuilder()</span><br><span class="line">                .modal(studentInfoModal)</span><br><span class="line">                .errorMsgs(errorMsgs).build();</span><br><span class="line">        resultModals.add(resultModal);</span><br><span class="line">        <span class="comment">//视数据量决定在这里落库还是在 doAfterAllAnalysed 方法里落库</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doAfterAllAnalysed</span><span class="params">(AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;doAfterAllAnalysed#excel数据解析完毕...&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invokeHeadMap</span><span class="params">(Map&lt;Integer, String&gt; headMap, AnalysisContext context)</span> &#123;</span><br><span class="line">        <span class="comment">//表头校验</span></span><br><span class="line">        log.info(<span class="string">&quot;解析到一条表头：&#123;&#125;&quot;</span>, JSONObject.toJSONString(headMap));</span><br><span class="line">        Map&lt;Integer, String&gt; reallyMap = ReflectUtils.getExcelHeadMap(StudentInfoModal.class);</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">headErrorStr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; headMap.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!headMap.get(i).equals(reallyMap.get(i))) &#123;</span><br><span class="line">                headErrorStr.append(String.format(<span class="string">&quot;表头第%s列[%s]应该为[%s]&quot;</span>, i + <span class="number">1</span>, headMap.get(i), reallyMap.get(i)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(headErrorStr.toString())) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ExcelAnalysisException</span>(headErrorStr.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 基本信息检查</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> studentInfoModal 学生信息(不为空)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> errorMsgs        错误信息集合(不为空)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">baseInfoCheck</span><span class="params">(<span class="meta">@NonNull</span> StudentInfoModal studentInfoModal, <span class="meta">@NonNull</span> List&lt;String&gt; errorMsgs)</span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;baseInfoCheck# studentInfoModal:&#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(studentInfoModal, studentInfoModal.getClass().getName());</span><br><span class="line">        validator.validate(studentInfoModal, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        <span class="keyword">if</span>(CollectionUtils.isNotEmpty(allErrors))&#123;</span><br><span class="line">            allErrors.forEach(error -&gt; errorMsgs.add(error.getDefaultMessage()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//非注解可完成的可以加在此处</span></span><br><span class="line">        <span class="keyword">if</span>(StringUtils.isNotBlank(studentInfoModal.getHeight()))&#123;</span><br><span class="line">            <span class="keyword">if</span>(NumberUtils.isCreatable(studentInfoModal.getHeight()))&#123;</span><br><span class="line">                <span class="type">Double</span> <span class="variable">height</span> <span class="operator">=</span> Double.valueOf(studentInfoModal.getHeight());</span><br><span class="line">                <span class="keyword">if</span>(height &gt; <span class="number">5.00D</span>)&#123;</span><br><span class="line">                    errorMsgs.add(<span class="string">&quot;身高值异常&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                errorMsgs.add(<span class="string">&quot;身高只能是数字&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(StringUtils.isNotBlank(studentInfoModal.getWeight()))&#123;</span><br><span class="line">            <span class="keyword">if</span>(NumberUtils.isCreatable(studentInfoModal.getWeight()))&#123;</span><br><span class="line">                <span class="type">Double</span> <span class="variable">weight</span> <span class="operator">=</span> Double.valueOf(studentInfoModal.getWeight());</span><br><span class="line">                <span class="keyword">if</span>(weight &gt; <span class="number">1000.00D</span>)&#123;</span><br><span class="line">                    errorMsgs.add(<span class="string">&quot;体重值异常&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                errorMsgs.add(<span class="string">&quot;体重只能是数字&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 业务逻辑验证</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> studentInfoModal 学生信息(不为空)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> errorMsgs        错误信息集合(不为空)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">logicVerification</span><span class="params">(<span class="meta">@NonNull</span> StudentInfoModal studentInfoModal, <span class="meta">@NonNull</span> List&lt;String&gt; errorMsgs)</span>&#123;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">count</span> <span class="operator">=</span> userService.countByNo(studentInfoModal.getNo());</span><br><span class="line">        <span class="keyword">if</span>(Objects.nonNull(count) &amp;&amp; count &gt; <span class="number">0L</span>)&#123;</span><br><span class="line">            errorMsgs.add(String.format(<span class="string">&quot;学生[%s]的信息已存在&quot;</span>, studentInfoModal.getNo()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>由于<code>StudentInfoListener</code>没有注册成为<code>spring</code>的组件使用部分<code>service</code>的时候需要在实例化的时候将其传进来以方便使用。此处只展示了一个比较简单的学生学号防重复的验证的写法，实际情况可能更多，需要结合实际业务自行编写。</p>
+<p>​	理论上来说，我们的数据验证和准备录入的数据的收集已经做得差不多了，将数据进行落库就完成了整个导入的过程。但是由于数据量的不同，可能落库的时机会有所不同，对于数据量较小的我们可以在<code>doAfterAllAnalysed</code>方法里面进行保存，即数据完全验证完毕后一次性全部入库。对于数据量太大的情况就需要考虑在<code>invoke</code>方法中选择对验证通过的数据列表分批落库了，比如当<code>validModals</code>里面每有一千条数据的时候就进行一次保存。</p>
+<p>​	此外，由于<code>easy excel</code>针对数据的处理是按行来进行的，所以我们每次的数据业务逻辑验证都是针对的数据库已有的数据来的，即两条完全一样的数据按照上面的代码的验证逻辑来说的话，都会通过验证。所以我们在实际验证的时候也要考虑这种情况。解决这种问题的方式有两种： 第一种就是加快数据落库的频率，没验证通过一条数据就落库一次，这样可能会稍稍加大导入时数据库的压力；第二种就是缓存此次导入的所有数据的特征值，比如不允许学号重复，就缓存此次导入的所有学号，用于对后续的数据的验证。</p>
+<p>​	至此，我们的数据导入的大体功能已经完成了，数据可以通过校验，我们能收集到数据校验不通过的原因，能对校验通过的数据进行落库保存。</p>
+<h2 id="返回结果"><a href="#返回结果" class="headerlink" title="返回结果"></a>返回结果</h2><p>​	一般接口而言，我们对于处理完的请求，返回相关的数据<code>json</code>，由前端进行结果提示就好。但是对于导入而言，这样的方式可能会有稍微的不妥，因为直接简述成功了多少行失败了多少行，对于用户进行改正然后再导入的过程是很不便的，不知道哪些行实际成功了哪些行实际失败了，就无从改正以进行后续的录入；而如果将所有的错误信息进行返回，则数据量稍微一大，整个的提示信息就很很长，用户阅读起来也会显得麻烦，更重要的是对于用户重新整理自己的导入文件也很不便。</p>
+<p>​	为了让用户有更好的体验，所以我们采用的是对导入的<code>excel</code>生成一个导入结果<code>excel</code>生产一个导入结果文档，在导入存在错误的时候提供给用户下载。在原有的<code>excel</code>导入模板基础上扩展出导入结果和失败原因两列，便于用户筛选导入成功的列和定位失败原因，快速过滤整理新的要导入文档。代码示例如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.excel.modal;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.ExcelProperty;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.ColumnWidth;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.ContentRowHeight;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.HeadFontStyle;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.annotation.write.style.HeadStyle;</span><br><span class="line"><span class="keyword">import</span> lombok.AllArgsConstructor;</span><br><span class="line"><span class="keyword">import</span> lombok.Data;</span><br><span class="line"><span class="keyword">import</span> lombok.NoArgsConstructor;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.beans.BeanUtils;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 学生信息错误模板</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> ozipin</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@date</span> 2021/04/01</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Data</span></span><br><span class="line"><span class="meta">@ColumnWidth(15)</span></span><br><span class="line"><span class="meta">@HeadFontStyle(fontHeightInPoints = 10)</span></span><br><span class="line"><span class="meta">@ContentRowHeight(20)</span></span><br><span class="line"><span class="meta">@NoArgsConstructor</span></span><br><span class="line"><span class="meta">@AllArgsConstructor()</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentInfoResultModal</span> <span class="keyword">extends</span> <span class="title class_">StudentInfoModal</span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;导入结果&quot;, index = 5)</span></span><br><span class="line">    <span class="keyword">public</span> String result;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@ExcelProperty(value = &quot;错误信息&quot;, index = 6)</span></span><br><span class="line">    <span class="keyword">public</span> String errorMsg;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 学生信息错误模板构建器</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@author</span> ozipin</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@date</span> 2021/04/01</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">class</span> <span class="title class_">StudentInfoErrorModalBuilder</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> <span class="type">StudentInfoModal</span> <span class="variable">studentInfoModal</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoModal</span>();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> String result;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">private</span> String errorMsg;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> StudentInfoErrorModalBuilder <span class="title function_">modal</span><span class="params">(StudentInfoModal studentInfoModal)</span>&#123;</span><br><span class="line">            <span class="built_in">this</span>.studentInfoModal = studentInfoModal;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> StudentInfoErrorModalBuilder <span class="title function_">errorMsgs</span><span class="params">(List&lt;String&gt; errorMsgs)</span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(CollectionUtils.isNotEmpty(errorMsgs))&#123;</span><br><span class="line">                <span class="built_in">this</span>.result = <span class="string">&quot;导入失败&quot;</span>;</span><br><span class="line">                <span class="built_in">this</span>.errorMsg = String.join(<span class="string">&quot;;\n&quot;</span>, errorMsgs);</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                <span class="built_in">this</span>.result = <span class="string">&quot;导入成功&quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">this</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> StudentInfoResultModal <span class="title function_">build</span><span class="params">()</span>&#123;</span><br><span class="line">            <span class="type">StudentInfoResultModal</span> <span class="variable">studentInfoResultModal</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoResultModal</span>(<span class="built_in">this</span>.result, <span class="built_in">this</span>.errorMsg);</span><br><span class="line">            BeanUtils.copyProperties(<span class="built_in">this</span>.studentInfoModal, studentInfoResultModal);</span><br><span class="line">            <span class="keyword">return</span> studentInfoResultModal;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Autowired</span></span><br><span class="line">   <span class="keyword">private</span> UserService userService;</span><br><span class="line">   <span class="meta">@Autowired</span></span><br><span class="line">   <span class="keyword">private</span> FileService fileService;</span><br><span class="line">   <span class="comment">/**</span></span><br><span class="line"><span class="comment">    * 文件导入</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line">   <span class="meta">@ApiOperation(value = &quot;文件导入&quot;)</span></span><br><span class="line">   <span class="meta">@PostMapping(value = &quot;/import&quot;)</span></span><br><span class="line">   <span class="keyword">public</span> CommonResultVo&lt;ExcelImportResultVo&gt; <span class="title function_">importExcel</span><span class="params">(<span class="meta">@ApiParam(value = &quot;file&quot;, required = true)</span> MultipartFile file)</span> &#123;</span><br><span class="line">       <span class="type">StudentInfoListener</span> <span class="variable">studentInfoListener</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoListener</span>(userService, fileService);</span><br><span class="line">       <span class="keyword">try</span> &#123;</span><br><span class="line">           EasyExcel.read(file.getInputStream(), StudentInfoModal.class, studentInfoListener).sheet().doRead();</span><br><span class="line">       &#125;<span class="keyword">catch</span> (IOException ex)&#123;</span><br><span class="line">           log.error(<span class="string">&quot;importExcel#IOException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CommonException</span>(ex.getMessage());</span><br><span class="line">       &#125;<span class="keyword">catch</span> (ExcelAnalysisException ex)&#123;</span><br><span class="line">           log.error(<span class="string">&quot;importExcel#BaseException: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">           <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">CommonException</span>(ex.getMessage());</span><br><span class="line">       &#125;</span><br><span class="line">       <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">CommonResultVoBuilder</span>&lt;ExcelImportResultVo&gt;().success(studentInfoListener.getExcelImportResultVo()).build();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ozipin.filemaster.excel.listener;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.EasyExcel;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.context.AnalysisContext;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.event.AnalysisEventListener;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.excel.exception.ExcelAnalysisException;</span><br><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSONObject;</span><br><span class="line"><span class="keyword">import</span> com.google.common.collect.Lists;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.common.ConstantStr;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.domain.vo.ExcelImportResultVo;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.excel.modal.StudentInfoResultModal;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.excel.modal.StudentInfoModal;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.service.FileService;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.service.UserService;</span><br><span class="line"><span class="keyword">import</span> com.ozipin.filemaster.utils.ReflectUtils;</span><br><span class="line"><span class="keyword">import</span> lombok.Getter;</span><br><span class="line"><span class="keyword">import</span> lombok.NonNull;</span><br><span class="line"><span class="keyword">import</span> lombok.extern.slf4j.Slf4j;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.collections4.CollectionUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.StringUtils;</span><br><span class="line"><span class="keyword">import</span> org.apache.commons.lang3.math.NumberUtils;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.BeanPropertyBindingResult;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.Errors;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.ObjectError;</span><br><span class="line"><span class="keyword">import</span> org.springframework.validation.beanvalidation.SpringValidatorAdapter;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.validation.Valid;</span><br><span class="line"><span class="keyword">import</span> javax.validation.Validation;</span><br><span class="line"><span class="keyword">import</span> javax.validation.Validator;</span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.util.List;</span><br><span class="line"><span class="keyword">import</span> java.util.Map;</span><br><span class="line"><span class="keyword">import</span> java.util.Objects;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Slf4j</span></span><br><span class="line"><span class="meta">@Getter</span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">StudentInfoListener</span> <span class="keyword">extends</span> <span class="title class_">AnalysisEventListener</span>&lt;StudentInfoModal&gt; &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">Validator</span> <span class="variable">javaxValidator</span> <span class="operator">=</span> Validation.buildDefaultValidatorFactory().getValidator();</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">SpringValidatorAdapter</span> <span class="variable">validator</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">SpringValidatorAdapter</span>(javaxValidator);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="type">ExcelImportResultVo</span> <span class="variable">excelImportResultVo</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">ExcelImportResultVo</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> UserService userService;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> FileService fileService;</span><br><span class="line">    <span class="comment">//验证通过的数据  最后用于保存</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;StudentInfoModal&gt; validModals = Lists.newArrayList();</span><br><span class="line">    <span class="comment">//验证结果</span></span><br><span class="line">    <span class="keyword">private</span> List&lt;StudentInfoResultModal&gt; resultModals = Lists.newArrayList();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">StudentInfoListener</span><span class="params">(UserService userService, FileService fileService)</span>&#123;</span><br><span class="line">        <span class="built_in">this</span>.userService = userService;</span><br><span class="line">        <span class="built_in">this</span>.fileService = fileService;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invoke</span><span class="params">(StudentInfoModal studentInfoModal, AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;invoke#解析到一条数据: &#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">        <span class="comment">//错误信息合集</span></span><br><span class="line">        List&lt;String&gt; errorMsgs = Lists.newArrayList();</span><br><span class="line">        <span class="comment">//数据基本格式验证</span></span><br><span class="line">        baseInfoCheck(studentInfoModal, errorMsgs);</span><br><span class="line">        <span class="comment">//业务逻辑验证</span></span><br><span class="line">        logicVerification(studentInfoModal, errorMsgs);</span><br><span class="line">        <span class="keyword">if</span>(CollectionUtils.isEmpty(errorMsgs))&#123;</span><br><span class="line">            validModals.add(studentInfoModal);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="type">StudentInfoResultModal</span> <span class="variable">resultModal</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StudentInfoResultModal</span>.StudentInfoErrorModalBuilder()</span><br><span class="line">                .modal(studentInfoModal)</span><br><span class="line">                .errorMsgs(errorMsgs).build();</span><br><span class="line">        resultModals.add(resultModal);</span><br><span class="line">        <span class="comment">//视数据量决定在这里落库还是在 doAfterAllAnalysed 方法里落库</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doAfterAllAnalysed</span><span class="params">(AnalysisContext analysisContext)</span> &#123;</span><br><span class="line">        log.info(<span class="string">&quot;doAfterAllAnalysed#excel数据解析完毕...&quot;</span>);</span><br><span class="line">        <span class="keyword">if</span>(validModals.size() == resultModals.size())&#123;</span><br><span class="line">            <span class="comment">//所有的数据验证通过</span></span><br><span class="line">            excelImportResultVo.setResultDesc(<span class="string">&quot;导入成功&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                excelImportResultVo.setResultDesc(String.format(<span class="string">&quot;此次导入总数据%s条,成功%s条,失败%s条,详情可见文档&quot;</span>, resultModals.size(),</span><br><span class="line">                        validModals.size(), resultModals.size()- validModals.size()));</span><br><span class="line">                <span class="comment">// 创建临时文件</span></span><br><span class="line">                <span class="type">File</span> <span class="variable">tempFile</span> <span class="operator">=</span> File.createTempFile(String.valueOf(System.currentTimeMillis()), ConstantStr.EXCEL_SUFFIX);</span><br><span class="line">                log.info(<span class="string">&quot;临时文件所在的本地路径：&#123;&#125;&quot;</span>, tempFile.getCanonicalPath());</span><br><span class="line">                EasyExcel.write(tempFile, StudentInfoResultModal.class)</span><br><span class="line">                        .sheet(ConstantStr.STUDENT_INFO_IMPORT_TEMPLATE)</span><br><span class="line">                        .doWrite(resultModals);</span><br><span class="line">                <span class="type">long</span> <span class="variable">fileId</span> <span class="operator">=</span> fileService.saveFile(tempFile);</span><br><span class="line">                excelImportResultVo.setErrorFileId(fileId);</span><br><span class="line">            &#125; <span class="keyword">catch</span> (IOException ex) &#123;</span><br><span class="line">                log.error(<span class="string">&quot;doAfterAllAnalysed#Exception: &#123;&#125;-&#123;&#125;&quot;</span>, ex.getMessage(), ex);</span><br><span class="line">                <span class="comment">//抛出其他异常最终都会被处理为ExcelAnalysisException 展示的异常信息会有问题</span></span><br><span class="line">                <span class="comment">//直接抛出ExcelAnalysisException可以解决</span></span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ExcelAnalysisException</span>(<span class="string">&quot;导入详情文件生成失败，请联系相关管理员进行处理&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(CollectionUtils.isNotEmpty(validModals))&#123;</span><br><span class="line">            userService.saveBatch(validModals);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">invokeHeadMap</span><span class="params">(Map&lt;Integer, String&gt; headMap, AnalysisContext context)</span> &#123;</span><br><span class="line">        <span class="comment">//表头校验</span></span><br><span class="line">        log.info(<span class="string">&quot;解析到一条表头：&#123;&#125;&quot;</span>, JSONObject.toJSONString(headMap));</span><br><span class="line">        Map&lt;Integer, String&gt; reallyMap = ReflectUtils.getExcelHeadMap(StudentInfoModal.class);</span><br><span class="line">        <span class="type">StringBuffer</span> <span class="variable">headErrorStr</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">StringBuffer</span>();</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> <span class="variable">i</span> <span class="operator">=</span> <span class="number">0</span>; i &lt; headMap.size(); i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (!headMap.get(i).equals(reallyMap.get(i))) &#123;</span><br><span class="line">                headErrorStr.append(String.format(<span class="string">&quot;表头第%s列[%s]应该为[%s]&quot;</span>, i + <span class="number">1</span>, headMap.get(i), reallyMap.get(i)));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (StringUtils.isNotBlank(headErrorStr.toString())) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> <span class="title class_">ExcelAnalysisException</span>(headErrorStr.toString());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 基本信息检查</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> studentInfoModal 学生信息(不为空)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> errorMsgs        错误信息集合(不为空)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">baseInfoCheck</span><span class="params">(<span class="meta">@NonNull</span> StudentInfoModal studentInfoModal, <span class="meta">@NonNull</span> List&lt;String&gt; errorMsgs)</span>&#123;</span><br><span class="line">        log.info(<span class="string">&quot;baseInfoCheck# studentInfoModal:&#123;&#125;&quot;</span>, studentInfoModal);</span><br><span class="line">        <span class="type">Errors</span> <span class="variable">errors</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">BeanPropertyBindingResult</span>(studentInfoModal, studentInfoModal.getClass().getName());</span><br><span class="line">        validator.validate(studentInfoModal, errors);</span><br><span class="line">        List&lt;ObjectError&gt; allErrors = errors.getAllErrors();</span><br><span class="line">        <span class="keyword">if</span>(CollectionUtils.isNotEmpty(allErrors))&#123;</span><br><span class="line">            allErrors.forEach(error -&gt; errorMsgs.add(error.getDefaultMessage()));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//非注解可完成的可以加在此处</span></span><br><span class="line">        <span class="keyword">if</span>(StringUtils.isNotBlank(studentInfoModal.getHeight()))&#123;</span><br><span class="line">            <span class="keyword">if</span>(NumberUtils.isCreatable(studentInfoModal.getHeight()))&#123;</span><br><span class="line">                <span class="type">Double</span> <span class="variable">height</span> <span class="operator">=</span> Double.valueOf(studentInfoModal.getHeight());</span><br><span class="line">                <span class="keyword">if</span>(height &gt; <span class="number">5.00D</span>)&#123;</span><br><span class="line">                    errorMsgs.add(<span class="string">&quot;身高值异常&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                errorMsgs.add(<span class="string">&quot;身高只能是数字&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>(StringUtils.isNotBlank(studentInfoModal.getWeight()))&#123;</span><br><span class="line">            <span class="keyword">if</span>(NumberUtils.isCreatable(studentInfoModal.getWeight()))&#123;</span><br><span class="line">                <span class="type">Double</span> <span class="variable">weight</span> <span class="operator">=</span> Double.valueOf(studentInfoModal.getWeight());</span><br><span class="line">                <span class="keyword">if</span>(weight &gt; <span class="number">1000.00D</span>)&#123;</span><br><span class="line">                    errorMsgs.add(<span class="string">&quot;体重值异常&quot;</span>);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">                errorMsgs.add(<span class="string">&quot;体重只能是数字&quot;</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 业务逻辑验证</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> studentInfoModal 学生信息(不为空)</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> errorMsgs        错误信息集合(不为空)</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">logicVerification</span><span class="params">(<span class="meta">@NonNull</span> StudentInfoModal studentInfoModal, <span class="meta">@NonNull</span> List&lt;String&gt; errorMsgs)</span>&#123;</span><br><span class="line">        <span class="type">Long</span> <span class="variable">count</span> <span class="operator">=</span> userService.countByNo(studentInfoModal.getNo());</span><br><span class="line">        <span class="keyword">if</span>(Objects.nonNull(count) &amp;&amp; count &gt; <span class="number">0L</span>)&#123;</span><br><span class="line">            errorMsgs.add(String.format(<span class="string">&quot;学生[%s]的信息已存在&quot;</span>, studentInfoModal.getNo()));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当导入如下的信息时：<img src="/1617360168082.png" alt="1617360168082"></p>
+<p>返回结果如下：</p>
+<p><img src="/1617360257365.png" alt="1617360257365"></p>
+<p>我们根据错误文件id下载详情文件，打开可见内容如下：</p>
+<p><img src="/1617360352055.png" alt="1617360352055"></p>
+<p>至此，我们的文件导出的整个流程完整走完。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/file/" rel="tag"># file</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/03/18/hexo(%E4%BA%8C)%E5%B8%83%E5%B1%80%E8%B0%83%E6%95%B4%E7%9A%84%E5%9D%91%E4%B8%8E%E5%87%BA%E8%B7%AF/" rel="next" title="hexo(二):布局调整的坑与出路">
+                <i class="fa fa-chevron-left"></i> hexo(二):布局调整的坑与出路
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/04/13/javax.validation(%E4%B8%80)%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" rel="prev" title="javax.validation(一)基本使用">
+                javax.validation(一)基本使用 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name"></p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/%7C%7C%20archive">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/Ozipin" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:908002873@qq.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">导言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="nav-number">2.</span> <span class="nav-text">准备工作</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E6%9D%BF%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.</span> <span class="nav-text">模板下载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E7%94%9F%E6%88%90"><span class="nav-number">3.1.</span> <span class="nav-text">直接生成</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%99%E6%80%81%E8%B5%84%E6%BA%90%E4%B8%8B%E8%BD%BD"><span class="nav-number">3.2.</span> <span class="nav-text">静态资源下载</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E5%AF%BC%E5%85%A5"><span class="nav-number">4.</span> <span class="nav-text">数据导入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BF%94%E5%9B%9E%E7%BB%93%E6%9E%9C"><span class="nav-number">5.</span> <span class="nav-text">返回结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ozipin</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
